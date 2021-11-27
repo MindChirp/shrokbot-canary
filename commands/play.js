@@ -2,7 +2,8 @@ const {prefix, token} = require('../config.json');
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 const fs = require("fs-extra");
-
+const { dbHandler } = require("../modules/database/dbModule");
+const path = require("path");
 
 module.exports = {
     name: "play",
@@ -32,36 +33,71 @@ module.exports = {
         }
 
         var video = await videoFinder(args.join(' '));
-        if(video) {
-            
-            function playAudio() {
-                var stream = ytdl(video.url, {filter:'audioonly'});
-                connection.play(stream, {seek: 0, volume: 1})
-                .on("finish", async ()=>{
-                    //Check if the song should be looped
-                    try {
-                        var config = JSON.parse(await fs.readFile("./currentConfig.json", "utf8"));
-                    } catch (error) {
-                        message.channel.send("Fuck.");
-                    }
-    
-                    if(config.loopSong) {
-                        playAudio();
-                    } else {
-                        //Leave the voicechannel when the video has been played
-                        setTimeout(()=>{
-                            vc.leave();
-                        }, 10000);
-                    }
-                })
+
+        //Check if there are videos in queue
+        
+
+        //Get the queue database
+        try {
+            var db = await dbHandler.get(path.join(path.dirname(__dirname), "database", "queue"), "queue" + message.guild.id);
+        } catch (error) {
+            try {
+                var db = await dbHandler.create("queue" + message.guild.id, path.join(path.dirname(__dirname), "database", "queue"));
+                await db.CREATE("username", "string");
+                await db.CREATE("video", "object");
+                await db.CREATE("place", "number");
+            } catch (error) {
+                message.channel.send("Sorry, your request couldn't be fulfilled.");
+                return;
             }
+        }
 
-            playAudio();
 
-
-            await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+        //Check for queue
+        var queue = await db.SELECT("*");
+        console.log(queue);
+        if(queue[0].values.length < 1) {
+            //There is no queue
+            playVideo(video);
         } else {
-            message.channel.send("No videos were found.");
+            //There is a queue, don't play the video right away.
+            message.channel.send("Your video has been added to the queue!");
+        }
+
+        await db.INSERT({username: message.author.username, video: video, place: 0});
+
+        async function playVideo(video) {
+            if(video) {
+                
+                function playAudio() {
+                    var stream = ytdl(video.url, {filter:'audioonly'});
+                    connection.play(stream, {seek: 0, volume: 1})
+                    .on("finish", async ()=>{
+                        //Check if the song should be looped
+                        try {
+                            var config = JSON.parse(await fs.readFile("./currentConfig.json", "utf8"));
+                        } catch (error) {
+                            message.channel.send("Fuck.");
+                        }
+        
+                        if(config.loopSong) {
+                            playAudio();
+                        } else {
+                            //Leave the voicechannel when the video has been played
+                            setTimeout(()=>{
+                                vc.leave();
+                            }, 10000);
+                        }
+                    })
+                }
+
+                playAudio();
+
+
+                await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+            } else {
+                message.channel.send("No videos were found.");
+            }
         }
 
     }

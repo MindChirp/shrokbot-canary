@@ -1,0 +1,87 @@
+{
+    "columns": [
+        {
+            "title": "username",
+            "type": "string",
+            "values": [
+                {
+                    "index": 0,
+                    "value": "Frikkern"
+                },
+                {
+                    "index": 1,
+                    "value": "Frikkern"
+                }
+            ]
+        },
+        {
+            "title": "video",
+            "type": "object",
+            "values": [
+                {
+                    "index": 0,
+                    "value": {
+                        "type": "video",
+                        "videoId": "0UsRW4F9LVY",
+                        "url": "https://youtube.com/watch?v=0UsRW4F9LVY",
+                        "title": "Super Mario Land Theme ピラプト王国, as improvised by Tom Brier",
+                        "description": "Cezary Sławecki transcribed this into MIDI. I've written it out. When I gave the original simple score to Tom, I asked him not to flesh ...",
+                        "image": "https://i.ytimg.com/vi/0UsRW4F9LVY/hq720.jpg",
+                        "thumbnail": "https://i.ytimg.com/vi/0UsRW4F9LVY/hq720.jpg",
+                        "seconds": 170,
+                        "timestamp": "2:50",
+                        "duration": {
+                            "seconds": 170,
+                            "timestamp": "2:50"
+                        },
+                        "ago": "5 years ago",
+                        "views": 239531,
+                        "author": {
+                            "name": "Keeper1st",
+                            "url": "https://youtube.com/user/Keeper1st"
+                        }
+                    }
+                },
+                {
+                    "index": 1,
+                    "value": {
+                        "type": "video",
+                        "videoId": "Sv1fDOwyK4s",
+                        "url": "https://youtube.com/watch?v=Sv1fDOwyK4s",
+                        "title": "250 Yo Mama Jokes - Can You Watch Them All?!",
+                        "description": "All the best Yo Mama so Fat jokes, Stupid jokes, Ugly jokes and more!So old your mama is. Babysit me she once did. Change my diaper she still does. - Yoda, oh, oh no. (music box music) Yo mama ...",
+                        "image": "https://i.ytimg.com/vi/Sv1fDOwyK4s/hq720.jpg",
+                        "thumbnail": "https://i.ytimg.com/vi/Sv1fDOwyK4s/hq720.jpg",
+                        "seconds": 1733,
+                        "timestamp": "28:53",
+                        "duration": {
+                            "seconds": 1733,
+                            "timestamp": "28:53"
+                        },
+                        "ago": "4 years ago",
+                        "views": 39833003,
+                        "author": {
+                            "name": "Yo Mama",
+                            "url": "https://youtube.com/user/yomama"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "title": "place",
+            "type": "number",
+            "values": [
+                {
+                    "index": 0,
+                    "value": 0
+                },
+                {
+                    "index": 1,
+                    "value": 0
+                }
+            ]
+        }
+    ],
+    "type": "MINDBASE"
+}
