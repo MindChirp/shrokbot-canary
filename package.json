@@ -9,14 +9,14 @@
   "author": "Frikk O. Larsen",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.3.2",
-    "auto-git-update": "^2.0.1",
-    "discord.js": "^12.2.0",
-    "ffmpeg-static": "^4.2.6",
+    "@discordjs/opus": "^0.3.3",
+    "auto-git-update": "^2.0.2",
+    "discord.js": "^12.5.3",
+    "ffmpeg-static": "^4.4.0",
     "fs-extra": "^10.0.0",
-    "fuzzyset": "^1.0.5",
+    "fuzzyset": "^1.0.6",
     "xmlhttprequest": "^1.8.0",
-    "yt-search": "^2.10.1",
+    "yt-search": "^2.10.2",
     "ytdl-core": "^4.9.1"
   }
 }

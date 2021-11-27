@@ -4,6 +4,7 @@ const ytSearch = require("yt-search");
 const fs = require("fs-extra");
 const { dbHandler } = require("../modules/database/dbModule");
 const path = require("path");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     name: "play",
@@ -42,6 +43,7 @@ module.exports = {
             var db = await dbHandler.get(path.join(path.dirname(__dirname), "database", "queue"), "queue" + message.guild.id);
         } catch (error) {
             try {
+                //Does not exist
                 var db = await dbHandler.create("queue" + message.guild.id, path.join(path.dirname(__dirname), "database", "queue"));
                 await db.CREATE("username", "string");
                 await db.CREATE("video", "object");
@@ -52,23 +54,64 @@ module.exports = {
             }
         }
 
-
-        //Check for queue
-        var queue = await db.SELECT("*");
-        console.log(queue);
-        if(queue[0].values.length < 1) {
-            //There is no queue
-            playVideo(video);
-        } else {
-            //There is a queue, don't play the video right away.
-            message.channel.send("Your video has been added to the queue!");
+        try {
+            var nowDb = await dbHandler.get(path.join(path.dirname(__dirname), "database", "playing"), "playing" + message.guild.id);
+        } catch (error) {
+            //Does not exist
+            try {
+                var nowDb = await dbHandler.create("playing" + message.guild.id, path.join(path.dirname(__dirname), "database", "playing"));
+                await nowDb.CREATE("username", "string");
+                await nowDb.CREATE("video", "object");
+                await nowDb.CREATE("order", "number");
+            } catch (error) {
+                console.log(error);
+                message.channel.send("Could not load song.");
+                return;
+            }
         }
+
 
         await db.INSERT({username: message.author.username, video: video, place: 0});
 
+        //Check for queue
+        var queue = await db.SELECT("*");
+        if(queue[0].values.length < 2) { //If there is one in queue, that is the one that has just been added
+            //There is no queue
+
+            playVideo(video);
+        } else {
+            //There is a queue, don't play the video right away.
+
+
+
+            var list = [];
+            var objs = queue[1].values;
+            var x;
+            for(x of objs) {
+                list.push(x);
+            }
+
+            //Create queue message
+            var queueEmbed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('Your queue')
+
+            var x;
+            for(x of list) {
+                console.log(x.value.title, x.value.timestamp);
+                queueEmbed.addField(x.value.title, x.value.timestamp);
+            }
+
+            message.channel.send(queueEmbed);
+        }
+
+
         async function playVideo(video) {
             if(video) {
-                
+                //Add this video object to the now playing database
+                replaceNowPlayingData(video);
+
+
                 function playAudio() {
                     var stream = ytdl(video.url, {filter:'audioonly'});
                     connection.play(stream, {seek: 0, volume: 1})
@@ -83,10 +126,17 @@ module.exports = {
                         if(config.loopSong) {
                             playAudio();
                         } else {
+
+                            playNextVideo(video);
+
+                            /*
                             //Leave the voicechannel when the video has been played
                             setTimeout(()=>{
                                 vc.leave();
                             }, 10000);
+                            */
+
+
                         }
                     })
                 }
@@ -98,6 +148,65 @@ module.exports = {
             } else {
                 message.channel.send("No videos were found.");
             }
+        }
+
+
+        async function replaceNowPlayingData(video) {
+            //Replace the currently playing video with a new one
+            //Remove the old video from queue list
+            
+            //Get the currently playing video
+            var nowPlaying = await nowDb.SELECT("order", 0);
+            if(!(nowPlaying.length < 1)) {
+                try {
+                    await nowDb.WIPE();
+                } catch (error) {
+                    console.log(error);
+                }
+
+                try {
+                    await nowDb.INSERT({username: message.author.username, video: video, order: 0});
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                try {
+                    await nowDb.INSERT({username: message.author.username, video: video, order: 0});
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+        }
+
+        async function playNextVideo(playedVideo) {
+            //Play the next video, and kill the old one
+            //Fetch the queue, is there something more?
+            try {
+                var queue = await db.SELECT("*");
+            } catch (error) {
+                //No queue
+                setTimeout(()=>{
+                    vc.leave();
+                }, 1000);
+                return;
+            }
+            console.log(queue);
+            if(queue[0].values.length < 1) {
+                //Do not continue
+                //Clear the now playing
+                await nowDb.WIPE();
+                await db.WIPE();
+                setTimeout(()=>{
+                    vc.leave();
+                }, 1000);
+                return;
+            } else {
+                //There is a queue, play the next one
+                var now = await nowDb.SELECT("order", 0);
+                console.log(now);
+            }
+
         }
 
     }

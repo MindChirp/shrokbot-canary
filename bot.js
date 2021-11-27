@@ -210,7 +210,7 @@ client.on("message", async message => {
     if(!message.guild) return;
 
 
-        if(message.content == "#donkey") {
+        if(message.content == "§donkey") {
             var voiceChannel = message.member.voice.channel;
             voiceChannel.join().then(connection => {
               const dispatcher = connection.play('donkey.mp3', {

@@ -65,8 +65,9 @@ const dbHandler = {
                 //Check if all the object keys exist as well
                 var x;
                 for(x of keys) {
+                    console.log(x);
                     var obj = db.columns.find(y => y.title === x);
-                    if(obj == undefined) {reject(new Error("Column not found!")); return;};
+                    if(obj == undefined) {reject(new Error("Column " + x + " not found!")); return;};
                 }
 
 
@@ -166,6 +167,31 @@ const dbHandler = {
         },
         update: (values=Object)=>{
             return "Hey! This function isn't done yet!";
+        },
+        wipe: function() {
+            return new Promise(async (resolve, reject)=>{
+                var meta = this.header;
+                try {
+                    var db = JSON.parse(await fs.readFile(path.join(meta.path, meta.dbname + ".json"), "utf8"));
+                } catch (error) {
+                    console.log(error);
+                    reject(new Error("Could not find database"));
+                    return;
+                }
+
+                //remove all entries with index
+                var x;
+                for(x of db.columns) {
+                    x.values = [];
+                }
+
+                //Save to the database again
+                try {
+                    await fs.writeFile(path.join(meta.path, meta.dbname + ".json"), JSON.stringify(db, null, 4), "utf8");
+                } catch (error) {
+                    reject(error);
+                }
+            })
         }
     },
     create: (name, dbpath) => {
@@ -187,7 +213,8 @@ const dbHandler = {
                     },
                     CREATE: dbHandler.functions.create,
                     INSERT: dbHandler.functions.insert,
-                    SELECT: dbHandler.functions.select
+                    SELECT: dbHandler.functions.select,
+                    WIPE: dbHandler.functions.wipe
                 }
                 resolve(db)
             })
@@ -216,7 +243,8 @@ const dbHandler = {
                 },
                 CREATE: dbHandler.functions.create,
                 INSERT: dbHandler.functions.insert,
-                SELECT: dbHandler.functions.select
+                SELECT: dbHandler.functions.select,
+                WIPE: dbHandler.functions.wipe
             }
 
             resolve(obj);
@@ -228,7 +256,7 @@ const dbHandler = {
             try {
                 var db = JSON.parse(await fs.readFile(path.join(dbpath, name + ".json"), "utf8"));
             } catch (error) {
-                reject(new Error("This database does not exist"));
+                reject(new Error("This database does not exist (" + name + ")"));
                 return;
             }
 
