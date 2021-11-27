@@ -192,6 +192,67 @@ const dbHandler = {
                     reject(error);
                 }
             })
+        },
+        delete: function(key, value){
+            return new Promise(async (resolve, reject)=>{
+                var meta = this.header;
+                try {
+                    var db = JSON.parse(await fs.readFile(path.join(meta.path, meta.dbname + ".json"), "utf8"));
+                } catch (error) {
+                    console.log(error);
+                    reject(new Error("Could not find database"));
+                    return;
+                }
+
+                console.log(db);
+
+                //Go through every column, check for key-value pair
+
+                var removeIndex;
+                let tempDb = JSON.parse(JSON.stringify(db));
+                //Clear all the values from the tempDb except from meta
+                var x;
+                for(x of tempDb.columns) {
+                    x.values = [];
+                }
+
+                console.log("MAINDB", db);
+
+                //console.log("TempDB", tempDb);
+
+                var cols = db.columns;
+                var x;
+                for(x of cols) {
+                    var y;
+                    for(y of x.values) {
+                        //Go through each and every column, and every key in that column
+                        console.log("COMPARING ", y.value, value)
+                        if(x.title == key && y.value == value) {
+                            //This is the thing
+                            removeIndex = y.index;
+                            break;
+                        }
+                    }
+                }
+
+                console.log("REMOVEINDEX", removeIndex);
+
+                //Add correct values to tempDb
+                for(let i = 0; i < db.columns.length; i++) {
+                    console.log(db.columns[i]);
+                    for(let k = 0; k < db.columns[i].values.length; k++) {
+                        if(db.columns[i].values[k].index != removeIndex) {
+                            console.log("PUSH:", db.columns[i].values[k])
+                            //Copy over to tempDb
+                            //console.log(db.columns[i].values[k]);
+                            tempDb.columns[i].values.push(db.columns[i].values[k]);
+                        }
+                    }
+                }
+
+                //console.log("FILLED TEMPDB", tempDb);
+
+            })
         }
     },
     create: (name, dbpath) => {
@@ -214,7 +275,8 @@ const dbHandler = {
                     CREATE: dbHandler.functions.create,
                     INSERT: dbHandler.functions.insert,
                     SELECT: dbHandler.functions.select,
-                    WIPE: dbHandler.functions.wipe
+                    WIPE: dbHandler.functions.wipe,
+                    DELETE: dbHandler.functions.delete
                 }
                 resolve(db)
             })

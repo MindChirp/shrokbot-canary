@@ -191,7 +191,6 @@ module.exports = {
                 }, 1000);
                 return;
             }
-            console.log(queue);
             if(queue[0].values.length < 1) {
                 //Do not continue
                 //Clear the now playing
@@ -204,7 +203,13 @@ module.exports = {
             } else {
                 //There is a queue, play the next one
                 var now = await nowDb.SELECT("order", 0);
-                console.log(now);
+                console.log("NOW PLAYING", now[1]);
+                try {
+                    await db.DELETE("video", now[1]) //Delete the row with the currently playing video
+                } catch (error) {
+                    console.log(error);
+                }
+
             }
 
         }
