@@ -1,0 +1,20 @@
+{
+    "columns": [
+        {
+            "title": "username",
+            "type": "string",
+            "values": []
+        },
+        {
+            "title": "video",
+            "type": "object",
+            "values": []
+        },
+        {
+            "title": "place",
+            "type": "number",
+            "values": []
+        }
+    ],
+    "type": "MINDBASE"
+}

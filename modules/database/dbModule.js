@@ -232,7 +232,6 @@ const dbHandler = {
                     }
                 }
 
-                console.log(removeIndex);
 
 
                 //Add correct values to tempDb

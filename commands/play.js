@@ -98,7 +98,6 @@ module.exports = {
 
             var x;
             for(x of list) {
-                console.log(x.value.title, x.value.timestamp);
                 queueEmbed.addField(x.value.title, x.value.timestamp);
             }
 
@@ -203,7 +202,6 @@ module.exports = {
             } else {
                 //There is a queue, play the next one
                 var now = await nowDb.SELECT("order", 0);
-                console.log("NOW PLAYING", now[1]);
                 try {
                     await db.DELETE("video", now[1]) //Delete the row with the currently playing video
                 } catch (error) {

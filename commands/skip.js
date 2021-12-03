@@ -93,13 +93,13 @@ module.exports = {
             
             //Get the currently playing video
             var nowPlaying = await nowDb.SELECT("order", 0);
+            console.log("NOWPLAYING: ", nowPlaying)
             var queue = await db.SELECT("*");
-            console.log("NOW PLAYING: ", nowPlaying)
             if(queue[0].values.length > 0) {
                 //If there is a queue
                 //Delete the currently playing song from queue
                 try {
-                    await db.DELETE("video", nowPlaying.columns[1].values[0].value)
+                    await db.DELETE("video", nowPlaying[1])
                 } catch (error) {
                     console.log(error);
                 }
@@ -107,6 +107,7 @@ module.exports = {
                 try {
                     var video = await db.SELECT("*");
                     await nowDb.WIPE();
+                    console.log("INSERTING INTO PLAYING DATABASE")
                     await nowDb.INSERT({username: message.author.username, video: video[1].values[0].value, place: 0}) 
                 } catch (error) {
                     
@@ -133,12 +134,12 @@ module.exports = {
 
             //Check if the queue length is 1, and that
             //the queued video is the one that just finished playing
-            if(queue[0].values.length == 1 && queue[1].values[0].value == playedVideo) {
+            if(queue[0].values.length == 1 && queue[1].values[0].value == playedVideo || queue[0].values.length == 1 && !playedVideo) {
                 //Do not continue
                 //Clear the now playing
                 await nowDb.WIPE();
                 await db.WIPE();
-
+                var vc = message.member.voice.channel;
                 setTimeout(async ()=>{
                     await vc.leave();
                 }, 1000);
