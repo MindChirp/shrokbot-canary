@@ -20,6 +20,18 @@ module.exports = {
             console.log(error);
         }
 
-        await vc.leave();
+
+        try {
+            var nowDb = await dbHandler.get(path.join(path.dirname(__dirname), "database", "playing"), "playing" + message.guild.id);
+            await nowDb.WIPE();
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            await vc.leave();
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

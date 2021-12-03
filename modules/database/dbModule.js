@@ -65,7 +65,6 @@ const dbHandler = {
                 //Check if all the object keys exist as well
                 var x;
                 for(x of keys) {
-                    console.log(x);
                     var obj = db.columns.find(y => y.title === x);
                     if(obj == undefined) {reject(new Error("Column " + x + " not found!")); return;};
                 }
@@ -204,7 +203,6 @@ const dbHandler = {
                     return;
                 }
 
-                console.log(db);
 
                 //Go through every column, check for key-value pair
 
@@ -216,7 +214,6 @@ const dbHandler = {
                     x.values = [];
                 }
 
-                console.log("MAINDB", db);
 
                 //console.log("TempDB", tempDb);
 
@@ -226,8 +223,7 @@ const dbHandler = {
                     var y;
                     for(y of x.values) {
                         //Go through each and every column, and every key in that column
-                        console.log("COMPARING ", y.value, value)
-                        if(x.title == key && y.value == value) {
+                        if(x.title == key && y.value.videoId == value.videoId) {
                             //This is the thing
                             removeIndex = y.index;
                             break;
@@ -235,19 +231,31 @@ const dbHandler = {
                     }
                 }
 
-                console.log("REMOVEINDEX", removeIndex);
+                console.log(removeIndex);
+
 
                 //Add correct values to tempDb
                 for(let i = 0; i < db.columns.length; i++) {
-                    console.log(db.columns[i]);
                     for(let k = 0; k < db.columns[i].values.length; k++) {
                         if(db.columns[i].values[k].index != removeIndex) {
-                            console.log("PUSH:", db.columns[i].values[k])
                             //Copy over to tempDb
                             //console.log(db.columns[i].values[k]);
                             tempDb.columns[i].values.push(db.columns[i].values[k]);
                         }
                     }
+                }
+
+
+                console.log(db.columns[1], tempDb.columns[1]);
+
+                db = tempDb;
+
+                try {
+                    await fs.writeFile(path.join(meta.path, meta.dbname + ".json"),JSON.stringify(tempDb, null, 4), "utf8");
+                    resolve();
+                } catch (error) {
+                    console.log(error);
+                    reject();
                 }
 
                 //console.log("FILLED TEMPDB", tempDb);
@@ -306,7 +314,8 @@ const dbHandler = {
                 CREATE: dbHandler.functions.create,
                 INSERT: dbHandler.functions.insert,
                 SELECT: dbHandler.functions.select,
-                WIPE: dbHandler.functions.wipe
+                WIPE: dbHandler.functions.wipe,
+                DELETE: dbHandler.functions.delete
             }
 
             resolve(obj);
