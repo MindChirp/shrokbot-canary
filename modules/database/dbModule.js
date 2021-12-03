@@ -187,6 +187,7 @@ const dbHandler = {
                 //Save to the database again
                 try {
                     await fs.writeFile(path.join(meta.path, meta.dbname + ".json"), JSON.stringify(db, null, 4), "utf8");
+                    resolve();
                 } catch (error) {
                     reject(error);
                 }
