@@ -130,14 +130,17 @@ module.exports = {
                 }, 1000);
                 return;
             }
-            if(queue[0].values.length < 1) {
+
+            //Check if the queue length is 1, and that
+            //the queued video is the one that just finished playing
+            if(queue[0].values.length == 1 && queue[1].values[0].value == playedVideo) {
                 //Do not continue
                 //Clear the now playing
                 await nowDb.WIPE();
                 await db.WIPE();
 
-                setTimeout(()=>{
-                    vc.leave();
+                setTimeout(async ()=>{
+                    await vc.leave();
                 }, 1000);
 
                 return;
