@@ -93,7 +93,6 @@ module.exports = {
             
             //Get the currently playing video
             var nowPlaying = await nowDb.SELECT("order", 0);
-            console.log("NOWPLAYING: ", nowPlaying)
             var queue = await db.SELECT("*");
             if(queue[0].values.length > 0) {
                 //If there is a queue
@@ -127,7 +126,7 @@ module.exports = {
             } catch (error) {
                 //No queue
                 setTimeout(()=>{
-                    vc.leave();
+                    await vc.leave();
                 }, 1000);
                 return;
             }

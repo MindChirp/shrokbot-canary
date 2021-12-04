@@ -111,7 +111,7 @@ module.exports = {
                 replaceNowPlayingData(video);
 
 
-                function playAudio() {
+                async function playAudio() {
                     var stream = ytdl(video.url, {filter:'audioonly'});
                     connection.play(stream, {seek: 0, volume: 1})
                     .on("finish", async ()=>{
@@ -186,24 +186,30 @@ module.exports = {
             } catch (error) {
                 //No queue
                 setTimeout(()=>{
-                    vc.leave();
+                    await vc.leave();
                 }, 1000);
                 return;
             }
-            if(queue[0].values.length < 1) {
+            if(queue[0].values.length == 1 && queue[1].values[0].value == playedVideo || queue[0].values.length == 1 && !playedVideo) {
                 //Do not continue
                 //Clear the now playing
                 await nowDb.WIPE();
                 await db.WIPE();
+                var vc = message.member.voice.channel;
                 setTimeout(()=>{
-                    vc.leave();
+                    await vc.leave();
                 }, 1000);
+
                 return;
             } else {
                 //There is a queue, play the next one
                 var now = await nowDb.SELECT("order", 0);
                 try {
                     await db.DELETE("video", now[1]) //Delete the row with the currently playing video
+                    //Get the next video
+                    var video = await db.SELECT("*");
+                    playVideo(video[1].values[0].value);
+
                 } catch (error) {
                     console.log(error);
                 }
