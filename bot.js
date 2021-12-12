@@ -57,8 +57,8 @@ for (const file of commandFiles) {
 
 client.user.setActivity(`Your mamas in 4k`, {type: 'STREAMING'});
 
-/*client.once("ready", () => {
-    client.user.setPresence({
+client.once("ready", () => {
+    /*client.user.setPresence({
         game:{
             name: "your mama",
             type: "Playing"
