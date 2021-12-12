@@ -55,7 +55,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-client.user.setActivity(`Your mamas in 4k`, {type: 'STREAMING'});
+
 
 client.once("ready", () => {
     /*client.user.setPresence({
@@ -64,6 +64,8 @@ client.once("ready", () => {
             type: "Playing"
         }
     })*/
+    client.user.setActivity(`Your mamas in 4k`, {type: 'STREAMING'});
+	
     console.log("Ready! Running shrokbot version 1.0.12");
 
     module.exports = { client };
