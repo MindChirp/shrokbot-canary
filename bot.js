@@ -65,7 +65,7 @@ client.once("ready", () => {
         }
     })*/
     client.user.setActivity(`your mamas in 4k`, {
-	    type: 'STREAMING',
+	    type: 'WATCHING',
 	    url: 'https://cornhub.website/'
     });
 	
