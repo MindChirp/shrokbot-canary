@@ -29,7 +29,7 @@ async function updateCheckLoop() {
     }, 60000)
 }
 
-updateCheckLoop();
+//updateCheckLoop();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
