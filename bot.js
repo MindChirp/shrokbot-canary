@@ -64,7 +64,9 @@ client.once("ready", () => {
             type: "Playing"
         }
     })*/
-    client.user.setActivity(`Your mamas in 4k`, {type: 'STREAMING'});
+    client.user.setActivity(`your mamas in 4k`, {
+	    type: 'WATCHING', url: 'https://cornhub.website/'
+    });
 	
     console.log("Ready! Running shrokbot version 1.0.12");
 
