@@ -33,13 +33,12 @@ module.exports = {
         }
 
         var video = await videoFinder(args.join(' '));
-
+        playVideo(video)
         //Check if there are videos in queue
 
-        await db.INSERT({username: message.author.username, video: video, place: 0});
 
         //Check for queue
-        var queue = await db.SELECT("*");
+        /*
         if(queue[0].values.length < 2) { //If there is one in queue, that is the one that has just been added
             //There is no queue
 
@@ -68,6 +67,7 @@ module.exports = {
 
             message.channel.send(queueEmbed);
         }
+        */
 
 
         async function playVideo(video) {
