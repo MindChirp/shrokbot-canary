@@ -196,7 +196,7 @@ module.exports = {
                 await nowDb.WIPE();
                 await db.WIPE();
                 var vc = message.member.voice.channel;
-                setTimeout(()=>{
+                setTimeout(async ()=>{
                     await vc.leave();
                 }, 1000);
 

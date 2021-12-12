@@ -125,7 +125,7 @@ module.exports = {
                 var queue = await db.SELECT("*");
             } catch (error) {
                 //No queue
-                setTimeout(()=>{
+                setTimeout(async ()=>{
                     await vc.leave();
                 }, 1000);
                 return;
