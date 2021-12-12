@@ -1,6 +1,5 @@
 const {prefix, token} = require('../config.json');
 const { MessageEmbed } = require("discord.js")
-const { dbHandler } = require("../modules/database/dbModule");
 const path = require("path");
 
 module.exports = {

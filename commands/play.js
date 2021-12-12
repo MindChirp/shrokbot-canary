@@ -2,7 +2,6 @@ const {prefix, token} = require('../config.json');
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 const fs = require("fs-extra");
-const { dbHandler } = require("../modules/database/dbModule");
 const path = require("path");
 const { MessageEmbed } = require("discord.js");
 
@@ -36,7 +35,7 @@ module.exports = {
         var video = await videoFinder(args.join(' '));
 
         //Check if there are videos in queue
-        
+
         await db.INSERT({username: message.author.username, video: video, place: 0});
 
         //Check for queue
