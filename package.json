@@ -1,6 +1,6 @@
 {
   "name": "shrokbot",
-  "version": "1.0.14",
+  "version": "1.0.12",
   "description": "",
   "main": "bot.js",
   "scripts": {
