@@ -64,7 +64,7 @@ client.once("ready", () => {
             type: "Playing"
         }
     })
-    console.log("Ready! Running shrokbot version 1.0.7");
+    console.log("Ready! Running shrokbot version 1.0.12");
 
     module.exports = { client };
 })

@@ -1,2 +1,1 @@
 forever restartall
-pause
