@@ -5,6 +5,8 @@ const fs = require("fs-extra");
 const path = require("path");
 const { MessageEmbed } = require("discord.js");
 const queueHandler = require("../modules/queueHandler.js");
+const playingHandler = require("../modules/nowHandler.js");
+const { playVideo } = require("../modules/playVideo.js");
 
 module.exports = {
     name: "play",
@@ -52,7 +54,7 @@ module.exports = {
                 console.log(error);
             }
             //No queue
-            playVideo(video);
+            playVideo({video:video, connection:connection, ytdl:ytdl, message:message});
         } else if(queue[0] == true) {
 
 
@@ -94,51 +96,5 @@ module.exports = {
             message.channel.send(queueEmbed);
         
         }
-
-
-
-
-            //There is a queue, don't play the video right away.
-
-
-
-        
-
-
-        async function playVideo(video) {
-            if(video) {
-                async function playAudio() {
-                    var stream = ytdl(video.url, {filter:'audioonly'});
-                    connection.play(stream, {seek: 0, volume: 1})
-                    .on("finish", async ()=>{
-                        //Check if the song should be looped
-                        try {
-                            var config = JSON.parse(await fs.readFile("./currentConfig.json", "utf8"));
-                        } catch (error) {
-                            message.channel.send("Fuck.");
-                        }
-        
-                        if(config.loopSong) {
-                            playAudio();
-                        } else {
-                            //If the song is not being looped, play the next video, or disconnect the bot
-                            playNextVideo(video);
-                        }
-                    })
-                }
-
-                playAudio();
-
-
-                await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
-            } else {
-                message.channel.send("No videos were found.");
-            }
-        }
-
     }
-}
-
-function playSongStream() {
-    
 }

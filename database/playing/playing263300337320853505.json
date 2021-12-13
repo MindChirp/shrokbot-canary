@@ -1,0 +1,43 @@
+{
+    "playing": [
+        {
+            "video": {
+                "type": "video",
+                "videoId": "w5tWYmIOWGk",
+                "url": "https://youtube.com/watch?v=w5tWYmIOWGk",
+                "title": "Imagine Dragons - On Top Of The World (Official Music Video)",
+                "description": "Directed by: Matt Eastin and Corey Fox Shop Imagine Dragons: http://smarturl.it/ImagineDragonsShop Sign up for email updates: ...",
+                "image": "https://i.ytimg.com/vi/w5tWYmIOWGk/hq720.jpg",
+                "thumbnail": "https://i.ytimg.com/vi/w5tWYmIOWGk/hq720.jpg",
+                "seconds": 242,
+                "timestamp": "4:02",
+                "duration": {
+                    "seconds": 242,
+                    "timestamp": "4:02"
+                },
+                "ago": "8 years ago",
+                "views": 300880640,
+                "author": {
+                    "name": "ImagineDragons",
+                    "url": "https://youtube.com/channel/UCT9zcQNlyht7fRlcjmflRSA"
+                }
+            },
+            "user": {
+                "id": "177111937383923712",
+                "system": null,
+                "locale": null,
+                "flags": 128,
+                "username": "Frikkern",
+                "bot": false,
+                "discriminator": "7612",
+                "avatar": "7d42a061813a1abdb7e57f569123fece",
+                "lastMessageChannelID": "737346979922968598",
+                "createdTimestamp": 1462297176453,
+                "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/2.png",
+                "tag": "Frikkern#7612",
+                "avatarURL": "https://cdn.discordapp.com/avatars/177111937383923712/7d42a061813a1abdb7e57f569123fece.webp",
+                "displayAvatarURL": "https://cdn.discordapp.com/avatars/177111937383923712/7d42a061813a1abdb7e57f569123fece.webp"
+            }
+        }
+    ]
+}
