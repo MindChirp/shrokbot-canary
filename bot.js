@@ -222,44 +222,6 @@ client.on("message", async message => {
 
      
     if(!message.guild) return;
-
-
-        if(message.content == "§donkey") {
-            var voiceChannel = message.member.voice.channel;
-            voiceChannel.join().then(connection => {
-              const dispatcher = connection.play('donkey.mp3', {
-                  volume: 1,
-              })
-			  
-			  console.log(message.member.user.username + " triggered donkey");
-    
-              dispatcher.on('finish', end => {
-                
-                  connection.disconnect();
-                  dispatcher.destroy();
-                });
-            }).catch(err => console.log(err))
-        }
-
-
-        if(message.content == "#rick") {
-            var voiceChannel = message.member.voice.channel;
-            voiceChannel.join().then(connection => {
-              const dispatcher = connection.play('rick.mp3', {
-                  volume: 1,
-              })
-    
-				console.log(message.member.user.username + " triggered rickroll");
-	
-              dispatcher.on('finish', end => {
-                
-                  connection.disconnect();
-                  dispatcher.destroy();
-                });
-            }).catch(err => console.log(err))
-        }
-
-
     if(!message.content.startsWith(prefix) || message.author.bot) return;
 
         

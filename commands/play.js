@@ -12,7 +12,6 @@ module.exports = {
     name: "play",
     description: "Plays music from YouTube",
     async execute(message, args) {
-
         try {
             var queue = await queueHandler.queueExists(message.guild.id);
         } catch (error) {
@@ -43,7 +42,9 @@ module.exports = {
         }
 
         //Get the video
-        var video = await videoFinder(args.join(' '));
+        //Try to remove playlist link
+        var part = [args.toString().split("&list")[0]];
+        var video = await videoFinder(part.join(' '));
         //Check if there are videos in queue
         if(queue == false || queue[1].queueEntries.length == 0) {
             //No queue exists
@@ -54,7 +55,7 @@ module.exports = {
                 console.log(error);
             }
             //No queue
-            playVideo({video:video, connection:connection, ytdl:ytdl, message:message});
+            playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
         } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
             //There is a queue
             //Add the new video

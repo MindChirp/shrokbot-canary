@@ -5,7 +5,8 @@ async function playVideo({video, connection, ytdl, message, config}) {
     if(video) {
         async function playAudio() {
             var stream = ytdl(video.url, {filter:'audioonly'});
-            connection.play(stream, {seek: config.seek||0, volume: config.volume||1})
+            console.log(config.seek)
+            connection.play(stream, {seek: config.seek||0, volume: 1})
             .on("finish", async ()=>{
                 playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
             })
@@ -26,8 +27,10 @@ async function playVideo({video, connection, ytdl, message, config}) {
 
         playAudio();
 
-
-        await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+        if(config.seek > 0) {
+        } else {
+            await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+        }
     } else {
         message.channel.send("No videos were found.");
     }
@@ -64,7 +67,7 @@ async function playNextVideo({video, connection, ytdl, message}) {
         return;
     } else if(queue[1].queueEntries.length > 0) {
         //Play the next video
-        playVideo({video: queue[1].queueEntries[0].video, connection: connection, ytdl: ytdl, message: message});
+        playVideo({video: queue[1].queueEntries[0].video, connection: connection, ytdl: ytdl, message: message, config:{}});
     }
 }
 
