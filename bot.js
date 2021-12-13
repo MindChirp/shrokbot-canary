@@ -4,6 +4,9 @@ const fs = require("fs");
 const { get } = require("http");
 const { start } = require("repl");
 const {prefix, token} = require('./config.json');
+const dotenv = require("dotenv");
+dotenv.config();
+
 client.commands = new Discord.Collection();
 const autoUpdate = require("auto-git-update");
 const path = require("path");
@@ -29,7 +32,11 @@ async function updateCheckLoop() {
     }, 60000)
 }
 
-updateCheckLoop();
+if(process.env.production == true) {
+    updateCheckLoop();
+} else {
+    console.log("Bot is not running in production, skipping autoUpdate");
+}
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 

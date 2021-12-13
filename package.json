@@ -12,6 +12,7 @@
     "@discordjs/opus": "^0.3.3",
     "auto-git-update": "^2.0.2",
     "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0",
     "fs-extra": "^10.0.0",
     "fuzzyset": "^1.0.6",
