@@ -22,7 +22,7 @@ module.exports = {
         var vc = message.member.voice.channel;
 
         var ch = message.channel.id;
-        if(ch != 405738093421789194 && ch != 737346979922968598) return message.channel.send("Fuck off");
+        //if(ch != 405738093421789194 && ch != 737346979922968598) return message.channel.send("Fuck off");
 
         if(!vc) return message.channel.send("You need to be in a voice channel to listen to music!")
         var perms = vc.permissionsFor(message.client.user);
