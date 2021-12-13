@@ -58,13 +58,18 @@ for (const file of commandFiles) {
 
 
 client.once("ready", () => {
-    client.user.setPresence({
+    /*client.user.setPresence({
         game:{
             name: "your mama",
             type: "Playing"
         }
-    })
 
+    })*/
+    client.user.setActivity(`your mamas in 4k`, {
+	    type: 'WATCHING',
+	    url: 'https://cornhub.website/'
+    });
+	
     const ver = require("./package.json");
     console.log("Ready! Running shrokbot version " + ver.version);
 
