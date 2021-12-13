@@ -53,6 +53,38 @@ function insertToQueue(guildId, video, user) {
     })
 }
 
+function deleteFromQueue({guildId, video}) {
+    return new Promise(async (resolve, reject)=>{
+        var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
+        var exists = await queueExists(guildId);
+        if(exists[0] == true) {
+            var queue = exists[1].queueEntries;
+
+            for(let i = 0; i < queue.length; i++) {
+                console.log(queue[i].video.videoId, video.videoId);
+                if(queue[i].video.videoId == video.videoId) {
+                    queue.splice(i,1);
+                    break;
+                }
+            }
+
+            var data = {
+                queueEntries: queue
+            }
+            
+            fs.writeFile(filePath, JSON.stringify(data, null, 4), (err)=>{
+                if(err) {
+                    //Did not go well..
+                    reject(err);
+                }
+    
+                resolve();
+            })
+
+        }
+    })
+}
+
 
 function deleteQueue(guildId) {
     return new Promise((resolve, reject)=>{
@@ -68,4 +100,4 @@ function deleteQueue(guildId) {
     })
 }
 
-module.exports = { queueExists, insertToQueue, deleteQueue };
+module.exports = { queueExists, insertToQueue, deleteQueue, deleteFromQueue };

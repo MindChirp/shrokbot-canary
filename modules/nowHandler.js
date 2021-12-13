@@ -58,4 +58,4 @@ function deletePlaying(guildId) {
 }
 
 
-module.exports = { nowExists, insertToPlaying, deletePlaying};
+module.exports = { nowExists, insertToPlaying, deletePlaying };

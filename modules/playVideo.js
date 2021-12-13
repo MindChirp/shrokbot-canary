@@ -1,3 +1,4 @@
+const queueHandler = require("../modules/queueHandler.js");
 const playingHandler = require("../modules/nowHandler.js");
 async function playVideo({video, connection, ytdl, message}) {
     if(video) {
@@ -5,19 +6,7 @@ async function playVideo({video, connection, ytdl, message}) {
             var stream = ytdl(video.url, {filter:'audioonly'});
             connection.play(stream, {seek: 0, volume: 1})
             .on("finish", async ()=>{
-                //Check if the song should be looped
-                try {
-                    var config = JSON.parse(await fs.readFile("./currentConfig.json", "utf8"));
-                } catch (error) {
-                    message.channel.send("Fuck.");
-                }
-
-                if(config.loopSong) {
-                    playAudio();
-                } else {
-                    //If the song is not being looped, play the next video, or disconnect the bot
-                    playNextVideo(video);
-                }
+                playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
             })
 
 
@@ -41,6 +30,36 @@ async function playVideo({video, connection, ytdl, message}) {
     }
 }
 
-function playNextVideo() {}
+async function playNextVideo({video, connection, ytdl, message}) {
+    //video is the currently playing video
+    //Remove the current video from queue
+    try {
+        await queueHandler.deleteFromQueue({guildId: message.guild.id, video: video})       
+    } catch (error) {
+        console.log(error);
+    }
 
-module.exports = { playVideo };
+    //Get new queue
+    try {
+        var queue = await queueHandler.queueExists(message.guild.id);
+    } catch (error) {
+        console.log(error);
+        message.channel.send("Could not play next video.");
+        return;
+    }
+
+    if(queue == false) {
+        //There is no queue 
+        message.channel.send("No more songs to play.");
+        return;
+    } else if(queue[1].queueEntries.length == 0) {
+        message.channel.send("No more songs to play.");
+        return;
+    } else if(queue[1].queueEntries.length > 0) {
+        //Play the next video
+        console.log(queue[1].queueEntries[0]);
+        playVideo({video: queue[1].queueEntries[0].video, connection: connection, ytdl: ytdl, message: message});
+    }
+}
+
+module.exports = { playVideo, playNextVideo };
