@@ -1,0 +1,43 @@
+{
+    "playing": [
+        {
+            "video": {
+                "type": "video",
+                "videoId": "JYrCj4lweLg",
+                "url": "https://youtube.com/watch?v=JYrCj4lweLg",
+                "title": "Grieg - Norwegian Dance no. 2.  H. 264",
+                "description": "Grieg - Norwegian Dance no.2. H.264.",
+                "image": "https://i.ytimg.com/vi/JYrCj4lweLg/hqdefault.jpg",
+                "thumbnail": "https://i.ytimg.com/vi/JYrCj4lweLg/hqdefault.jpg",
+                "seconds": 158,
+                "timestamp": "2:38",
+                "duration": {
+                    "seconds": 158,
+                    "timestamp": "2:38"
+                },
+                "ago": "12 years ago",
+                "views": 252084,
+                "author": {
+                    "name": "avihu4",
+                    "url": "https://youtube.com/user/avihu4"
+                }
+            },
+            "user": {
+                "id": "177111937383923712",
+                "system": null,
+                "locale": null,
+                "flags": 128,
+                "username": "Frikkern",
+                "bot": false,
+                "discriminator": "7612",
+                "avatar": "7d42a061813a1abdb7e57f569123fece",
+                "lastMessageChannelID": null,
+                "createdTimestamp": 1462297176453,
+                "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/2.png",
+                "tag": "Frikkern#7612",
+                "avatarURL": "https://cdn.discordapp.com/avatars/177111937383923712/7d42a061813a1abdb7e57f569123fece.webp",
+                "displayAvatarURL": "https://cdn.discordapp.com/avatars/177111937383923712/7d42a061813a1abdb7e57f569123fece.webp"
+            }
+        }
+    ]
+}

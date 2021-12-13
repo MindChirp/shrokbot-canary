@@ -1,13 +1,16 @@
 const queueHandler = require("../modules/queueHandler.js");
+const ytSearch = require("yt-search");
 const playingHandler = require("../modules/nowHandler.js");
-async function playVideo({video, connection, ytdl, message}) {
+async function playVideo({video, connection, ytdl, message, config}) {
     if(video) {
         async function playAudio() {
             var stream = ytdl(video.url, {filter:'audioonly'});
-            connection.play(stream, {seek: 0, volume: 1})
+            connection.play(stream, {seek: config.seek||0, volume: config.volume||1})
             .on("finish", async ()=>{
                 playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
             })
+
+            
 
 
 
@@ -61,7 +64,6 @@ async function playNextVideo({video, connection, ytdl, message}) {
         return;
     } else if(queue[1].queueEntries.length > 0) {
         //Play the next video
-        console.log(queue[1].queueEntries[0]);
         playVideo({video: queue[1].queueEntries[0].video, connection: connection, ytdl: ytdl, message: message});
     }
 }

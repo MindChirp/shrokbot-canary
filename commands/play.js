@@ -34,6 +34,7 @@ module.exports = {
         }
 
         var connection = await vc.join();
+        
 
         var videoFinder = async(query)=>{
             var videoResult = await ytSearch(query);
@@ -55,8 +56,7 @@ module.exports = {
             //No queue
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message});
         } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
-
-
+            //There is a queue
             //Add the new video
             try {
                 await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
@@ -67,6 +67,7 @@ module.exports = {
             }
 
 
+
             //Refresh the queue
             try {
                 var queue = await queueHandler.queueExists(message.guild.id);
@@ -75,25 +76,21 @@ module.exports = {
             }
 
 
-            var list = [];
-            var objs = queue[1].queueEntries;
-
-            for(let i = 0; i < objs.length; i++) {
-                list.push(objs[i]);
-            }
-
-            //Create queue message
+            //Create added to queue message
             var queueEmbed = new MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle('Your queue')
-
-            var x;
-            for(x of list) {
-                queueEmbed.addField(x.video.title, x.video.timestamp + " | Requested by " + x.user.username);
-            }
+                .setAuthor("Added to queue", "https://cdn.discordapp.com/avatars/" + message.member.user.id + "/" + message.member.user.avatar + ".webp")
+                .setColor('#0099ff')
+                .setTitle(video.title)
+                .setURL(video.url)
+                .setThumbnail(video.image)
+                .addFields(
+                    {name: "Channel", value: video.author.name, inline:true},
+                    {name: "Length", value: video.timestamp, inline:true},
+                    {name: "Estimated time until playing", value: "Ur mom", inline: true},
+                    {name: "Position in queue", value: queue[1].queueEntries.length, inline:false}
+                )
 
             message.channel.send(queueEmbed);
-        
         }
     }
 }
