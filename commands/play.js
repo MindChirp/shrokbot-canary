@@ -43,10 +43,9 @@ module.exports = {
 
         //Get the video
         var video = await videoFinder(args.join(' '));
-        
         //Check if there are videos in queue
-        if(queue == false) {
-
+        if(queue == false || queue[1].queueEntries.length == 0) {
+            //No queue exists
             //Add video to queue
             try {
                 await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
@@ -55,7 +54,7 @@ module.exports = {
             }
             //No queue
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message});
-        } else if(queue[0] == true) {
+        } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
 
 
             //Add the new video
