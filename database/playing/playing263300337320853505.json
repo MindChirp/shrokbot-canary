@@ -1,0 +1,43 @@
+{
+    "playing": [
+        {
+            "video": {
+                "type": "video",
+                "videoId": "tMtNDx0e0kY",
+                "url": "https://youtube.com/watch?v=tMtNDx0e0kY",
+                "title": "宝島",
+                "description": "ぱんだウインドオーケストラ 第4回定期演奏会（卒業公演） 『宝島』 指揮：石坂 幸治 コンサートマスター：上野 耕平 作曲：和泉宏隆 編曲： ...",
+                "image": "https://i.ytimg.com/vi/tMtNDx0e0kY/hq720.jpg",
+                "thumbnail": "https://i.ytimg.com/vi/tMtNDx0e0kY/hq720.jpg",
+                "seconds": 259,
+                "timestamp": "4:19",
+                "duration": {
+                    "seconds": 259,
+                    "timestamp": "4:19"
+                },
+                "ago": "5 years ago",
+                "views": 2120440,
+                "author": {
+                    "name": "PANDA Wind Orchestra",
+                    "url": "https://youtube.com/channel/UCE7EZaeOJ8PsRDsupchsydw"
+                }
+            },
+            "user": {
+                "id": "160028224699629568",
+                "system": null,
+                "locale": null,
+                "flags": 128,
+                "username": "Arne den gale bananen",
+                "bot": false,
+                "discriminator": "4024",
+                "avatar": "39a34205d24e1eb36c2a205295b72715",
+                "lastMessageChannelID": "737346979922968598",
+                "createdTimestamp": 1458224101949,
+                "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/4.png",
+                "tag": "Arne den gale bananen#4024",
+                "avatarURL": "https://cdn.discordapp.com/avatars/160028224699629568/39a34205d24e1eb36c2a205295b72715.webp",
+                "displayAvatarURL": "https://cdn.discordapp.com/avatars/160028224699629568/39a34205d24e1eb36c2a205295b72715.webp"
+            }
+        }
+    ]
+}
