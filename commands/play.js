@@ -4,11 +4,18 @@ const ytSearch = require("yt-search");
 const fs = require("fs-extra");
 const path = require("path");
 const { MessageEmbed } = require("discord.js");
+const queueHandler = require("../modules/queueHandler.js");
 
 module.exports = {
     name: "play",
     description: "Plays music from YouTube",
     async execute(message, args) {
+
+        try {
+            var queue = await queueHandler.queueExists(message.guild.id);
+        } catch (error) {
+            
+        }
 
         var vc = message.member.voice.channel;
 
@@ -32,27 +39,46 @@ module.exports = {
             return (videoResult.videos.length > 1)?videoResult.videos[0]:null;
         }
 
+        //Get the video
         var video = await videoFinder(args.join(' '));
-        playVideo(video)
+        
         //Check if there are videos in queue
+        if(queue == false) {
 
-
-        //Check for queue
-        /*
-        if(queue[0].values.length < 2) { //If there is one in queue, that is the one that has just been added
-            //There is no queue
-
+            //Add video to queue
+            try {
+                await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
+            } catch (error) {
+                console.log(error);
+            }
+            //No queue
             playVideo(video);
-        } else {
-            //There is a queue, don't play the video right away.
+        } else if(queue[0] == true) {
 
+
+            //Add the new video
+            try {
+                await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
+            } catch (error) {
+                console.log(error);
+                message.channel.send("Sorry, I could not add that video to the queue list.");
+                return;
+            }
+
+
+            //Refresh the queue
+            try {
+                var queue = await queueHandler.queueExists(message.guild.id);
+            } catch (error) {
+                console.log("Could not refresh queue");                
+            }
 
 
             var list = [];
-            var objs = queue[1].values;
-            var x;
-            for(x of objs) {
-                list.push(x);
+            var objs = queue[1].queueEntries;
+
+            for(let i = 0; i < objs.length; i++) {
+                list.push(objs[i]);
             }
 
             //Create queue message
@@ -62,12 +88,21 @@ module.exports = {
 
             var x;
             for(x of list) {
-                queueEmbed.addField(x.value.title, x.value.timestamp);
+                queueEmbed.addField(x.video.title, x.video.timestamp + " | Requested by " + x.user.username);
             }
 
             message.channel.send(queueEmbed);
+        
         }
-        */
+
+
+
+
+            //There is a queue, don't play the video right away.
+
+
+
+        
 
 
         async function playVideo(video) {
@@ -86,17 +121,8 @@ module.exports = {
                         if(config.loopSong) {
                             playAudio();
                         } else {
-
+                            //If the song is not being looped, play the next video, or disconnect the bot
                             playNextVideo(video);
-
-                            /*
-                            //Leave the voicechannel when the video has been played
-                            setTimeout(()=>{
-                                vc.leave();
-                            }, 10000);
-                            */
-
-
                         }
                     })
                 }

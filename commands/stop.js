@@ -3,6 +3,7 @@ const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 const fs = require("fs-extra");
 const path = require("path");
+const queueHandler = require("../modules/queueHandler.js");
 
 module.exports = {
     name: "stop",
@@ -10,5 +11,14 @@ module.exports = {
     async execute(message, args) {
         var vc = message.member.voice.channel;
         if(!vc) return message.channel.send("You need to be in a voice channel goddamnit!");
+
+
+        //remove the queue database
+        try {
+            await queueHandler.deleteQueue(message.guild.id);
+        } catch (error) {
+            console.log(error);
+        }
+
    }
 }

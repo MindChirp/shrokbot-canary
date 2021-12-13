@@ -1,49 +1,45 @@
 const {prefix, token} = require('../config.json');
 const { MessageEmbed } = require("discord.js")
 const path = require("path");
+const queueHandler = require("../modules/queueHandler.js");
+
 
 module.exports = {
     name: "queue",
-    description: "Plays music from YouTube",
+    description: "Shows the currently queued songs",
     async execute(message, args) {
-
+        //Get the queue
         try {
-            var db = await dbHandler.get(path.join(path.dirname(__dirname), "database", "queue"), "queue" + message.guild.id)
+            var queue = await queueHandler.queueExists(message.guild.id);
         } catch (error) {
-            //No database --> No queue
-            message.channel.send("There are no songs queued.");
+            console.log(error);    
+        }
+
+
+        if(queue == false) {
+            message.channel.send("There is no queue!");
             return;
         }
 
-        try {
-            var queue = await db.SELECT("*");
-        } catch (error) {
-            console.log(error);
-            message.channel.send("Could not fetch queue.");
-            return;
+
+        var list = [];
+        var objs = queue[1].queueEntries;
+
+        for(let i = 0; i < objs.length; i++) {
+            list.push(objs[i]);
         }
 
-         //Display the queue
-         var list = [];
-         var objs = queue[1].values;
-         var x;
-         for(x of objs) {
-             list.push(x);
-         }
+        //Create queue message
+        var queueEmbed = new MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('Your queue')
 
-         //Create queue message
-         var queueEmbed = new MessageEmbed()
-         .setColor('#0099ff')
-         .setTitle('Your queue')
-
-         console.log(list);
-         var x;
-         for(x of list) {
-             console.log(x.value.title, x.value.timestamp);
-             queueEmbed.addField(x.value.title, x.value.timestamp);
-         }
-
-         message.channel.send(queueEmbed);
-
+        var x;
+        for(x of list) {
+            queueEmbed.addField(x.video.title, x.video.timestamp + " | Requested by " + x.user.username);
+        }
+        
+        message.channel.send(queueEmbed);
+        
     }
 }
