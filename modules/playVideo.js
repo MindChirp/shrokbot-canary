@@ -50,9 +50,13 @@ async function playNextVideo({video, connection, ytdl, message}) {
 
     if(queue == false) {
         //There is no queue 
+        var vc = message.member.voice.channel;
+        vc.leave();
         message.channel.send("No more songs to play.");
         return;
     } else if(queue[1].queueEntries.length == 0) {
+        var vc = message.member.voice.channel;
+        vc.leave();
         message.channel.send("No more songs to play.");
         return;
     } else if(queue[1].queueEntries.length > 0) {

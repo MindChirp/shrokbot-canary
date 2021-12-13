@@ -4,6 +4,7 @@ const ytSearch = require("yt-search");
 const fs = require("fs-extra");
 const path = require("path");
 const queueHandler = require("../modules/queueHandler.js");
+const playingHandler = require("../modules/nowHandler.js");
 
 module.exports = {
     name: "stop",
@@ -19,6 +20,15 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+
+        //remove the queue database
+        try {
+            await playingHandler.deletePlaying(message.guild.id);
+        } catch (error) {
+            console.log(error);
+        }
+
+        await vc.leave();
 
    }
 }
