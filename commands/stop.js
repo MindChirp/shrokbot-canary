@@ -2,8 +2,9 @@ const {prefix, token} = require('../config.json');
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 const fs = require("fs-extra");
-const { dbHandler } = require("../modules/database/dbModule");
 const path = require("path");
+const queueHandler = require("../modules/queueHandler.js");
+const playingHandler = require("../modules/nowHandler.js");
 
 module.exports = {
     name: "stop",
@@ -12,26 +13,22 @@ module.exports = {
         var vc = message.member.voice.channel;
         if(!vc) return message.channel.send("You need to be in a voice channel goddamnit!");
 
-        //Clear the database
-        //var db = await dbHandler.get(path.join(path.dirname(__dirname), "database", "queue"), "queue" + message.guild.id);
+
+        //remove the queue database
         try {
-            await dbHandler.drop(path.join(path.dirname(__dirname), "database", "queue"), "queue" + message.guild.id);
+            await queueHandler.deleteQueue(message.guild.id);
         } catch (error) {
             console.log(error);
         }
 
-
+        //remove the queue database
         try {
-            var nowDb = await dbHandler.get(path.join(path.dirname(__dirname), "database", "playing"), "playing" + message.guild.id);
-            await nowDb.WIPE();
+            await playingHandler.deletePlaying(message.guild.id);
         } catch (error) {
             console.log(error);
         }
 
-        try {
-            await vc.leave();
-        } catch (error) {
-            console.log(error);
-        }
-    }
+        await vc.leave();
+
+   }
 }

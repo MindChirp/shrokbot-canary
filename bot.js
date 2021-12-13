@@ -29,7 +29,7 @@ async function updateCheckLoop() {
     }, 60000)
 }
 
-updateCheckLoop();
+//updateCheckLoop();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -63,13 +63,15 @@ client.once("ready", () => {
             name: "your mama",
             type: "Playing"
         }
+
     })*/
     client.user.setActivity(`your mamas in 4k`, {
 	    type: 'WATCHING',
 	    url: 'https://cornhub.website/'
     });
 	
-    console.log("Ready! Running shrokbot version 1.0.12");
+    const ver = require("./package.json");
+    console.log("Ready! Running shrokbot version " + ver.version);
 
     module.exports = { client };
 })

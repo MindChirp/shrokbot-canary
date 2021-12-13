@@ -5,6 +5,8 @@ module.exports = {
     name: "loop",
     description: "Loops the playing song",
     async execute(message, args) {
+        message.channel.send("This command has temporarily been disabled.");
+        return;
         //read the config
         try {
             var config = JSON.parse(await fs.readFile("./currentConfig.json"), "utf8");
