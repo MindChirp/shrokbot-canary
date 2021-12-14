@@ -95,75 +95,45 @@ var randomRickHour = 0;
 setInterval(()=>{
     //Read through the timestamp array, check if there is a matching time
     var d = new Date();
+    var n = d.toLocaleTimeString();
+	var days = d.getDay();
     var hours = d.getHours();
     var minutes = d.getMinutes();
-	var seconds = d.getSeconds();
-	var days = d.getDay();
-
-	
-
-	if(countdown == 5 || countdown == 10 || countdown == 15 || countdown == 20 ){
-
-			if(hours < 10 && minutes < 10 && seconds < 10){
-				console.log(days + " 0" + hours + ":" + "0" + minutes + ":" + "0" + seconds);
-			}else if(hours < 10 && minutes < 10){
-				console.log(days + " 0" + hours + ":" + "0" + minutes + ":" +seconds);
-			}else if(hours < 10 && seconds < 10){
-				console.log(days + " 0" + hours + ":" + minutes + ":" + "0" + seconds);
-			}else if(minutes < 10 && seconds < 10){
-				console.log(days, hours + ":" + "0" + minutes + ":" + "0" + seconds);
-			}else if(hours < 10){
-				console.log(days + " 0" + hours + ":" + minutes + ":" + seconds);
-			}else if(minutes < 10){
-				console.log(days + " " + hours + ":" + "0" + minutes + ":" + seconds);
-			}else if(seconds < 10){
-				console.log(days + " " + hours + ":" + minutes + ":" + "0" + seconds);
-			}else{
-				console.log(days + " " + hours + ":" + minutes + ":" + seconds);
-			}
-	}
+    var seconds = d.getSeconds();
 
 
+    //Printer ut tiden
+    if(countdown == 5 || countdown == 10 || countdown == 15 || countdown == 20 ){
+        console.log(days + " " + n);
+    }
 
 
-	if(startRandomTime == 0){
+    //Beregne og printe ut random rickroll
+    if(startRandomTime == 0){
         randomHour = Math.floor((Math.random() * 8) + 16);
         randomMinute = Math.floor((Math.random() * 59));
-		startRandomTime = 1;
-		if(randomRickHour == 1){
-			console.log("The random rick hour has passed, it was : " + randomHour + ":" + randomMinute);
-		}else if(randomHour < 10 && randomMinute < 10){
-			console.log("New random rickroll assigned : " + "0" + randomHour + ":" + "0" + randomMinute);
-		}else if(randomHour < 10){
-			console.log("New random rickroll assigned : " + "0" + randomHour + ":" + randomMinute);
-		}else if(randomMinute < 10){
-			console.log("New random rickroll assigned : " + randomHour + ":" + "0" + randomMinute);
-		}else{
-			console.log("New random rickroll assigned : " + randomHour + ":" + randomMinute);
-		}
-    } else if (hours == 0 && minutes == 0 && seconds == 00) {
-		startRandomTime = 0;
+        //legger til 0 foran hvis over 10
+        if (randomHour < 10) {
+            randomHour = "0" + randomHour;
+        }
+        if (randomMinute < 10) {
+            randomMinute = "0" + randomMinute;
+        }
+        console.log("New random rickroll assigned : "+randomHour+":"+randomMinute);
+        startRandomTime = 1;
+    }else if(randomRickHour == 0 && countdown == 20){
+        console.log("The random rickroll will commence at this timestamp : "+randomHour+":"+randomMinute);
+        countdown = 0;
+    }else if(randomRickHour == 1 && countdown == 20){
+        console.log("The random rick hour has passed, it was : "+randomHour+":"+randomMinute);
+        countdown = 0;
+    }else {countdown += 1}
+    
+    if (hours == 0 && minutes == 0 && seconds == 00){
+        startRandomTime = 0;
 		randomRickHour = 0;
-	}
-
-
-    if (countdown == 20){
-		if(randomRickHour == 1){
-			console.log("The random rick hour has passed, it was : " + randomHour + ":" + randomMinute);
-		}else if(randomHour < 10 && randomMinute < 10){
-			    console.log("The random rickroll is going to be executed at this timestamp: " + "0" + randomHour + ":" + "0" + randomMinute);
-			}else if(randomHour < 10){
-				console.log("The random rickroll is going to be executed at this timestamp: " + "0" + randomHour + ":" + randomMinute);
-			}else if(randomMinute < 10){
-				console.log("The random rickroll is going to be executed at this timestamp: " + randomHour + ":" + "0" + randomMinute);
-			}else{
-				console.log("The random rickroll is going to be executed at this timestamp: " + randomHour + ":" + randomMinute);
-			}
-		countdown = 0;
-    }else{
-        countdown += 1;
     }
-	
+
 
 
 
@@ -177,9 +147,6 @@ setInterval(()=>{
             const dispatcher = connection.play('rick.mp3', {
                 volume: 1,
             })
-            
-
-			
             dispatcher.on('finish', end => {
                 
                 connection.disconnect();
