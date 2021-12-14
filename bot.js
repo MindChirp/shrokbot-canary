@@ -32,7 +32,7 @@ async function updateCheckLoop() {
     }, 60000)
 }
 
-if(process.env.production == true) {
+if(process.env.NODE_ENV == "production") {
     updateCheckLoop();
 } else {
     console.log("Bot is not running in production, skipping autoUpdate");
