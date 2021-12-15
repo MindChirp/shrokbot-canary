@@ -78,14 +78,13 @@ client.once("ready", () => {
 	    type: 'WATCHING',
 	    url: 'https://cornhub.website/'
     });
+    module.exports = { client };
 	
     const ver = require("./package.json");
     console.log("Ready! Running shrokbot version " + ver.version);
-
     startBirthdayHandling(); //Start checking for birthdays on this date
 
 
-    module.exports = { client };
 })
 
 client.login(token);

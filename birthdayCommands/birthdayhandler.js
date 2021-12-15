@@ -4,12 +4,14 @@ const { playVideo } = require("../modules/playVideo.js");
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 const { MessageEmbed } = require("discord.js");
-
-
+var client;
 var birthdays;
 var updateConfigInterval = 1; //In minutes
 
 function startBirthdayHandling() {
+    sendWishes();
+    client = require("../bot.js").client;
+    //playBirthdayWishes({"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"});
     setInterval(async ()=>{
         //Update the birthday config once in a while
         try {
@@ -31,7 +33,7 @@ function startBirthdayHandling() {
 
 }
 
-var birthdayList = [];
+var birthdayList = [{"name":"Jakob Behrens", "date":"02/05", "music": {"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"}}];
 
 function checkForBirthday() {
     if(!birthdays) return;
@@ -61,11 +63,12 @@ function checkForBirthday() {
 
 
     //Execute birthday wishes
-    sendWishes();
+    //sendWishes();
 }
 
 
-function sendWishes() {
+async function sendWishes() {
+    if(birthdayList.length == 0) return;
     //Go through each wish, if there are multiple for one day
     for(let i = 0; i < birthdayList.length; i++) {
         //Get the media
@@ -76,11 +79,17 @@ function sendWishes() {
         } catch (error) {
             
         }
+
+
+        //Send a birthday wish in the general text channel
+        var tc = client.channels.cache.get("263300337320853505");
+        if(!tc){console.log("No TEXT CHANNEL"); return;}
+
+        tc.send("Happy birthday, `" + birthdayList[i].name + "`! I hope you have a wonderful day!");
+
     }
 }
-
-
-function playBirthdayWishes(media) {
+async function playBirthdayWishes(media) {
     //Check if it is a link or a pre-downloaded media file
     if(media.type == "link") {
         //Play as youtube video
@@ -108,8 +117,13 @@ function playBirthdayWishes(media) {
         to the voice channel.
 
         */
-        playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
 
+        var vc = client.channels.cache.get("263300337320853506"); //General kenobi
+        if(!vc){console.log("No VOICE CHANNEL"); return;}
+        
+        var connection = await vc.join();
+
+        playVideo({video:video, connection:connection, ytdl:ytdl, config: {}});
 
     }
 }

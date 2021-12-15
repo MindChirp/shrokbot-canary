@@ -2,37 +2,50 @@ const queueHandler = require("../modules/queueHandler.js");
 const ytSearch = require("yt-search");
 const playingHandler = require("../modules/nowHandler.js");
 async function playVideo({video, connection, ytdl, message, config}) {
-    if(video) {
-        async function playAudio() {
-            var stream = ytdl(video.url, {filter:'audioonly'});
-            connection.play(stream, {seek: config.seek||0, volume: 1})
-            .on("finish", async ()=>{
-                playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
-            })
+    return new Promise(async(resolve,reject)=>{
 
-            
+        if(video) {
+            async function playAudio() {
+                var stream = ytdl(video.url, {filter:'audioonly'});
+                connection.play(stream, {seek: config.seek||0, volume: 1})
+                .on("finish", async ()=>{
+                    if(!message) {
+                        //Return promise as resolved
+                        resolve();
+                    } else {
+                        playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
+                    }
+                })
+
+                
 
 
 
-            //Insert the currently playing video
-            try {
-                await playingHandler.insertToPlaying(message.guild.id, video, message.member.user);
-            } catch (error) {
-                console.log(error);                            
+                //Insert the currently playing video
+                if(message) {
+                    try {
+                        await playingHandler.insertToPlaying(message.guild.id, video, message.member.user);
+                    } catch (error) {
+                        console.log(error);                            
+                    }
+                }
+
+                
             }
 
-            
-        }
+            playAudio();
 
-        playAudio();
-
-        if(config.seek > 0) {
+            if(config.seek > 0) {
+            } else {
+                if(!message) return;
+                await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+            }
         } else {
-            await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+            if(!message) return;
+            message.channel.send("No videos were found.");
         }
-    } else {
-        message.channel.send("No videos were found.");
-    }
+    })
+
 }
 
 async function playNextVideo({video, connection, ytdl, message}) {

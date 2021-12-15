@@ -4,14 +4,14 @@
         {"name":"Frikk Balder", "date":"29/05"},
         {"name":"Ola Glåmen", "date":"16/10"},
         {"name":"Sander Jevanord", "date":"17/11"},
-        {"name":"Marco Andrè", "date":"19/08"},
+        {"name":"Marco Andrè", "date":"19/08", "music": {"type": "link", "source": "https://www.youtube.com/watch?v=6BDBDIjaPWM"}},
         {"name":"Andreas Gjersøe", "date":"09/08"},
         {"name":"William Tinnion-Varholm", "date":"13/07"},
         {"name":"Johannes Rønningen", "date":"04/07"},
         {"name":"Nora Ling", "date":"24/07"},
         {"name":"Torjus Finnerud", "date":"01/09"},
-        {"name":"Jacob Sundelius", "date":"11/11"},
+        {"name":"Jacob Sundelius", "date":"11/11", "music": {"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"}},
         {"name": "Isac Boredal", "date": "02/02"},
-        {"name":"Adam Haust", "date":"19/12"}
+        {"name":"Adam Haust", "date":"19/12", "music": {"type":"link", "source": "https://www.youtube.com/watch?v=VLVwGZFUJyc"}}
     ]
 }
