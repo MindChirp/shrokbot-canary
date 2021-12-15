@@ -5,7 +5,6 @@ async function playVideo({video, connection, ytdl, message, config}) {
     if(video) {
         async function playAudio() {
             var stream = ytdl(video.url, {filter:'audioonly'});
-            console.log(config.seek)
             connection.play(stream, {seek: config.seek||0, volume: 1})
             .on("finish", async ()=>{
                 playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});

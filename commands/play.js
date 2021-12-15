@@ -37,14 +37,17 @@ module.exports = {
 
         var videoFinder = async(query)=>{
             var videoResult = await ytSearch(query);
-
             return (videoResult.videos.length > 1)?videoResult.videos[0]:null;
         }
 
         //Get the video
         //Try to remove playlist link
-        var part = [args.toString().split("&list")[0]];
-        var video = await videoFinder(part.join(' '));
+        var part = [args[0].toString().split("&list")[0]];
+        try {
+            var video = await videoFinder(part.join(' '));
+        } catch (error) {
+            console.log(error)
+        }
         //Check if there are videos in queue
         if(queue == false || queue[1].queueEntries.length == 0) {
             //No queue exists

@@ -28,6 +28,7 @@ module.exports = {
             console.log(error);
         }
 
+        await message.delete();
         await vc.leave();
 
    }

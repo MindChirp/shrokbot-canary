@@ -19,6 +19,7 @@ module.exports = {
             message.channel.send("There is no currently playing song!");
             return;
         } else if(playing[1].playing.length > 0) {
+            console.log(playing[1].playing)
             //There is a song playing
             var nowPlaying = playing[1].playing[0];
             var vc = message.member.voice.channel;

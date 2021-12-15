@@ -16,7 +16,7 @@ module.exports = {
         }
 
 
-        if(queue == false) {
+        if(queue == false || queue[1].queueEntries.length == 0) {
             message.channel.send("There is no queue!");
             return;
         }
