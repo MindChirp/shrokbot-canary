@@ -5,6 +5,8 @@ const { get } = require("http");
 const { start } = require("repl");
 const {prefix, token} = require('./config.json');
 const dotenv = require("dotenv");
+const { startBirthdayHandling } = require("./birthdayCommands/birthdayhandler.js");
+
 dotenv.config();
 
 client.commands = new Discord.Collection();
@@ -79,6 +81,9 @@ client.once("ready", () => {
 	
     const ver = require("./package.json");
     console.log("Ready! Running shrokbot version " + ver.version);
+
+    startBirthdayHandling(); //Start checking for birthdays on this date
+
 
     module.exports = { client };
 })
