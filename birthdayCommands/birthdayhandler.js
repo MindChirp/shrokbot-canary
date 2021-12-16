@@ -154,7 +154,8 @@ async function playBirthdayWishes(media, member) {
 
         playVideo({video:video, connection:connection, ytdl:ytdl, config: {}})
         .then(async ()=>{
-            await vc.leave();
+            //await vc.leave();
+            console.log("LEAVINGG")
         })
 
     }

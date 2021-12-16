@@ -61,6 +61,8 @@ module.exports = {
         if(validURL(args[0])) {
             //If the query is a valid URL, do some processing so that the bot can understand the link
             part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
+        } else {
+            part = args;
         }
 
 
