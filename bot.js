@@ -1,13 +1,24 @@
-const Discord = require("discord.js");
-const client = new Discord.Client();
+const { Client, Intents, Collection } = require("discord.js");
+
+const client = new Client({
+    intents: [
+        [
+            Intents.FLAGS.GUILD_MEMBERS,
+            Intents.FLAGS.GUILD_PRESENCES,
+            Intents.FLAGS.VOICE_STATES
+        ]
+    ]
+});
 const fs = require("fs");
 const { get } = require("http");
 const { start } = require("repl");
 const {prefix, token} = require('./config.json');
 const dotenv = require("dotenv");
+const { startBirthdayHandling } = require("./birthdayCommands/birthdayhandler.js");
+
 dotenv.config();
 
-client.commands = new Discord.Collection();
+client.commands = new Collection();
 const autoUpdate = require("auto-git-update");
 const path = require("path");
 const updateConfig = {
@@ -17,6 +28,21 @@ const updateConfig = {
     exitOnComplete: true
 }
 
+
+/*
+THIS CODE REACTS IF A USER CONNECTS TO A CHANNEL. CAN BE USEFUL SOMETIME IN THE FUTURE
+
+
+client.on("voiceStateUpdate", (oldVoiceState, newVoiceState)=>{
+    if(newVoiceState.channel) {
+        console.log("Connected to " + newVoiceState.channel.name);
+    } else if(oldVoiceState.channel) {
+        console.log("Left channel");
+    }
+})
+
+
+*/
 
 async function updateCheckLoop() {
     
@@ -72,15 +98,23 @@ client.once("ready", () => {
         }
 
     })*/
+
     client.user.setActivity(`your mamas in 4k`, {
 	    type: 'WATCHING',
 	    url: 'https://cornhub.website/'
     });
+    module.exports = { client };
 	
     const ver = require("./package.json");
     console.log("Ready! Running shrokbot version " + ver.version);
+    startBirthdayHandling(); //Start checking for birthdays on this date
 
-    module.exports = { client };
+
+    //Send a version update message
+    var tc = client.channels.cache.get("737346979922968598");
+    if(!tc){console.log("No TEXT CHANNEL"); return;}
+    tc.send("Shrokbot up and running - `ver" + ver.version + "`.");
+
 })
 
 client.login(token);

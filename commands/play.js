@@ -8,6 +8,7 @@ const queueHandler = require("../modules/queueHandler.js");
 const playingHandler = require("../modules/nowHandler.js");
 const { playVideo } = require("../modules/playVideo.js");
 
+
 module.exports = {
     name: "play",
     description: "Plays music from YouTube",
@@ -42,7 +43,29 @@ module.exports = {
 
         //Get the video
         //Try to remove playlist link
-        var part = [args[0].toString().split("&list")[0]];
+
+
+        
+        function validURL(str) {
+            var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            return !!pattern.test(str);
+        }
+
+        var part;
+
+        if(validURL(args[0])) {
+            //If the query is a valid URL, do some processing so that the bot can understand the link
+            part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
+        } else {
+            part = args;
+        }
+
+
         try {
             var video = await videoFinder(part.join(' '));
         } catch (error) {
