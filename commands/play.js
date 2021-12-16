@@ -43,7 +43,7 @@ module.exports = {
 
         //Get the video
         //Try to remove playlist link
-        var part = [args[0].toString().split("&list")[0]];
+        var part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
         try {
             var video = await videoFinder(part.join(' '));
         } catch (error) {

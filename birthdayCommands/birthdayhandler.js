@@ -7,10 +7,11 @@ const { MessageEmbed } = require("discord.js");
 var client;
 var birthdays;
 var updateConfigInterval = 1; //In minutes
+var Guild;
 
 function startBirthdayHandling() {
-    sendWishes();
     client = require("../bot.js").client;
+    Guild = client.guilds.cache.get("263300337320853505");
     //playBirthdayWishes({"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"});
     setInterval(async ()=>{
         //Update the birthday config once in a while
@@ -33,7 +34,7 @@ function startBirthdayHandling() {
 
 }
 
-var birthdayList = [{"name":"Jakob Behrens", "date":"02/05", "music": {"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"}}];
+var birthdayList = [];
 
 function checkForBirthday() {
     if(!birthdays) return;
@@ -50,20 +51,22 @@ function checkForBirthday() {
         if(newDate.getDate() == date.getDate() && newDate.getMonth() == date.getMonth()) {
             //Today is a birthday!
             //Check if the clock is precisely 12:00:00 AM
-            if(h == 0 && m == 0 && s == 0 || h==12 && m==0 && s==0) {
-                //The time is nigh!
-                //Send a message to the text channel
+            //Check if this birthday wish has been added to the array or not
+            var index = birthdayList.findIndex(item => item.name === birthdays.birthdays[i].name);
+            if(index == -1) {
+                //console.log("BIRTHDAY FOUND: ", birthdays.birthdays[i])
+                //This item does not exist
                 var birthday = birthdays.birthdays[i];
                 birthdayList.push(birthday);
-
-                console.log("BIRTHDAY FOUND: ", birthdays.birthdays[i])
             }
         }
     }
 
 
     //Execute birthday wishes
-    //sendWishes();
+    if(birthdayList.length > 0) {
+        sendWishes();
+    }
 }
 
 
@@ -72,24 +75,42 @@ async function sendWishes() {
     //Go through each wish, if there are multiple for one day
     for(let i = 0; i < birthdayList.length; i++) {
         //Get the media
+        if(birthdayList[i].fulfilled) continue; //Skip this wish if the birthday wish has already been granted
+
         var media = birthdayList[i].music;
         
+
+
+        //Check if user is connected to a voice channel
         try {
-            await playBirthdayWishes(media);
+            var member = await Guild.members.cache.get(birthdayList[i].id);
         } catch (error) {
-            
+            console.log(error);
+            continue;
         }
+        
+        if(member.voice.channel) {
+            console.log("BIRTHDAY BOY " + birthdayList[i].name + " FOUND IN VOICE CHANNEL!");
+            birthdayList[i].fulfilled = true; //Mark wish as fulfilled
 
+            try {
+                await playBirthdayWishes(media, member);
+            } catch (error) {
+                
+            }
+            //Send a birthday wish in the general text channel
+            var tc = client.channels.cache.get("263300337320853505");
+            if(!tc){console.log("No TEXT CHANNEL"); return;}
 
-        //Send a birthday wish in the general text channel
-        var tc = client.channels.cache.get("263300337320853505");
-        if(!tc){console.log("No TEXT CHANNEL"); return;}
+            tc.send("Happy birthday, `" + birthdayList[i].name + "`! Here's your birthday salute!");
 
-        tc.send("Happy birthday, `" + birthdayList[i].name + "`! I hope you have a wonderful day!");
-
+        } else {
+            //Do nothing yet
+        }
+        
     }
 }
-async function playBirthdayWishes(media) {
+async function playBirthdayWishes(media, member) {
     //Check if it is a link or a pre-downloaded media file
     if(media.type == "link") {
         //Play as youtube video
@@ -100,7 +121,7 @@ async function playBirthdayWishes(media) {
 
 
         try {
-            var video = await videoFinder(media.source);
+            var video = await videoFinder(media.source.split("&list")[0].split("&ab_channel")[0]);
         } catch (error) {
             console.log(error);
             return;
@@ -117,13 +138,23 @@ async function playBirthdayWishes(media) {
         to the voice channel.
 
         */
+       console.log(video)
+        if(!video) {
+            var tc = client.channels.cache.get("263300337320853505");
+            if(!tc){console.log("No TEXT CHANNEL"); return;}
+            tc.message.send("Sadly, I don't have a birthday salute to play for you");
+            return;
+        }
 
-        var vc = client.channels.cache.get("263300337320853506"); //General kenobi
+        var vc = member.voice.channel; //General kenobi
         if(!vc){console.log("No VOICE CHANNEL"); return;}
         
         var connection = await vc.join();
 
-        playVideo({video:video, connection:connection, ytdl:ytdl, config: {}});
+        playVideo({video:video, connection:connection, ytdl:ytdl, config: {}})
+        .then(async ()=>{
+            await vc.leave();
+        })
 
     }
 }
