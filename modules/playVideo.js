@@ -43,6 +43,7 @@ async function playVideo({video, connection, ytdl, message, config}) {
         } else {
             if(!message) return;
             message.channel.send("No videos were found.");
+            
         }
     })
 

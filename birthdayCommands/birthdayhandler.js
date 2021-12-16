@@ -120,6 +120,7 @@ async function playBirthdayWishes(media, member) {
         }
 
 
+
         try {
             var video = await videoFinder(media.source.split("&list")[0].split("&ab_channel")[0]);
         } catch (error) {
