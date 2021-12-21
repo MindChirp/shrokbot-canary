@@ -1,0 +1,43 @@
+{
+    "playing": [
+        {
+            "video": {
+                "type": "video",
+                "videoId": "3gBVouGwEWc",
+                "url": "https://youtube.com/watch?v=3gBVouGwEWc",
+                "title": "If I can prove that I never touched my balls (REMASTERED BETTER)",
+                "description": "The remastered version was a bit out of sync and didn't show the play and TikTok side by side. original remaster here: ...",
+                "image": "https://i.ytimg.com/vi/3gBVouGwEWc/hq720.jpg",
+                "thumbnail": "https://i.ytimg.com/vi/3gBVouGwEWc/hq720.jpg",
+                "seconds": 69,
+                "timestamp": "1:09",
+                "duration": {
+                    "seconds": 69,
+                    "timestamp": "1:09"
+                },
+                "ago": "2 months ago",
+                "views": 2405021,
+                "author": {
+                    "name": "KT",
+                    "url": "https://youtube.com/channel/UCE0t6Ol2vjbYGINd0bEGyUQ"
+                }
+            },
+            "user": {
+                "id": "268385096917057540",
+                "system": null,
+                "locale": null,
+                "flags": 128,
+                "username": "Herr Hardbæsj",
+                "bot": false,
+                "discriminator": "8733",
+                "avatar": "bb7ac664ebd450508723533bc836b16c",
+                "lastMessageChannelID": "263300337320853505",
+                "createdTimestamp": 1484058393459,
+                "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/3.png",
+                "tag": "Herr Hardbæsj#8733",
+                "avatarURL": "https://cdn.discordapp.com/avatars/268385096917057540/bb7ac664ebd450508723533bc836b16c.webp",
+                "displayAvatarURL": "https://cdn.discordapp.com/avatars/268385096917057540/bb7ac664ebd450508723533bc836b16c.webp"
+            }
+        }
+    ]
+}
