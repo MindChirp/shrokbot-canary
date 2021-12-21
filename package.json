@@ -17,6 +17,8 @@
     "forever": "^4.0.1",
     "fs-extra": "^10.0.0",
     "fuzzyset": "^1.0.6",
+    "simple-oauth2": "^4.3.0",
+    "xhr2": "^0.2.1",
     "xmlhttprequest": "^1.8.0",
     "yt-search": "^2.10.2",
     "ytdl-core": "^4.9.1"

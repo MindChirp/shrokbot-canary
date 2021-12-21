@@ -111,9 +111,11 @@ client.once("ready", () => {
 
 
     //Send a version update message
-    var tc = client.channels.cache.get("737346979922968598");
-    if(!tc){console.log("No TEXT CHANNEL"); return;}
-    tc.send("Shrokbot up and running - `ver" + ver.version + "`.");
+    if(process.env.NODE_ENV == "production") {
+        var tc = client.channels.cache.get("737346979922968598");
+        if(!tc){console.log("No TEXT CHANNEL"); return;}
+        tc.send("Shrokbot up and running - `ver" + ver.version + "`.");
+    }
 
 })
 
