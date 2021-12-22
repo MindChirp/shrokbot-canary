@@ -1,8 +1,11 @@
 const queueHandler = require("../modules/queueHandler.js");
 const ytSearch = require("yt-search");
 const playingHandler = require("../modules/nowHandler.js");
+const { MessageEmbed } = require("discord.js");
+
 async function playVideo({video, connection, ytdl, message, config}) {
     return new Promise(async(resolve,reject)=>{
+        const { client } = require("../bot.js");
 
         if(video) {
             async function playAudio() {
@@ -38,7 +41,20 @@ async function playVideo({video, connection, ytdl, message, config}) {
             if(config.seek > 0) {
             } else {
                 if(!message) return;
-                await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
+                //Send embed
+                console.log(video)
+                var embed = new MessageEmbed()
+                .setAuthor("Now playing", client.user.displayAvatarURL())
+                .setColor("#ffff00")
+                .setTitle(video.title)
+                .setURL(video.url)
+                .setThumbnail(video.image)
+                .addFields(
+                    {name: "Channel", value: video.author.name, inline: true},
+                    {name: "Length", value: video.timestamp, inline: true}
+                )
+                await message.channel.send(embed);
+                //await message.channel.send(`:clap: Now playing ***` + video.title + `***`);
             }
         } else {
             if(!message) return;
