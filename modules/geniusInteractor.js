@@ -35,20 +35,31 @@ function getRandom() {
 }
 
 function getByArtist(artist) {
-    getArtistId(artist)
-    .then(res=>{
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", ARTIST + "/" + res + accessToken);
-        xhr.send();
-        
-        xhr.onreadystatechange = function() {
-            if(this.readyState == 4 && this.status == 200) {
-                //OK
-                console.log(this.responseText);
-            } else if(this.readyState == 4 && this.status != 200) {
-                console.log(this.responseText);
+    return new Promise((resolve, reject)=>{
+
+        var artistName = artist.join(" ");
+        getArtistId(artistName)
+        .then(res=>{
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", ARTIST + "/" + res + "/songs" + accessToken);
+            xhr.send();
+            
+            xhr.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200) {
+                    //OK
+                    var res = JSON.parse(this.responseText);
+                    var len = res.response.songs.length;
+                    var rand = Math.round(Math.random()*len);
+
+                    var song = res.response.songs[rand];
+                    resolve(song);
+
+                } else if(this.readyState == 4 && this.status != 200) {
+                    console.log(this.responseText);
+                    reject(this.responseText);
+                }
             }
-        }
+        })
     })
 }
 
@@ -62,6 +73,7 @@ function getArtistId(artistName) {
         xhr.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
                 //OK
+                if(!JSON.parse(this.responseText).response.hits[0]) {reject("Artist not found"); return;}
                 resolve(JSON.parse(this.responseText).response.hits[0].result.primary_artist.id)
             } else if(this.readyState == 4 && this.status != 200) {
                 reject(this.responseText);

@@ -19,7 +19,8 @@ module.exports = {
                 {name: prefix + "banword",value:"Add a word to the addtopic ban filter"},
                 {name: prefix + "donkey",value:"Fun for the whole family"},
                 {name: prefix + "siwallah",value:"wollaaaaaah"},
-                {name: prefix + "rick",value:"You know what this is."}
+                {name: prefix + "rick",value:"You know what this is."},
+                {name: prefix + "song",value:"Play either a random song, or add an artist name to play a random song from that artist. `BETA`."}
             )
 
             message.channel.send(embed);
