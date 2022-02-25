@@ -87,6 +87,8 @@ module.exports = {
         } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
             //There is a queue
             //Add the new video
+            if(!video) {message.channel.send("Video not found."); return;};
+
             try {
                 await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
             } catch (error) {
