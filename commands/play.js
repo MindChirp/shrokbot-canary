@@ -16,8 +16,9 @@ module.exports = {
         try {
             var queue = await queueHandler.queueExists(message.guild.id);
         } catch (error) {
-            
+            console.error(error);
         }
+
 
         var vc = message.member.voice.channel;
 
@@ -32,6 +33,7 @@ module.exports = {
         if(!args.length) {
             return message.channel.send("Specify a link as well!");
         }
+
 
         
 
@@ -56,17 +58,37 @@ module.exports = {
         }
 
         var part;
+        part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
 
-        if(validURL(args[0])) {
-            //If the query is a valid URL, do some processing so that the bot can understand the link
-            part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
-        } else {
-            part = args;
+        /*
+        try {
+            console.log(args[0]);
+            if(!validURL(args[0])) {
+                console.log("iajnsdasdadaddad")
+            }
+            if(validURL(args[0])) {
+                console.log("asdasdsad")
+
+                    //If the query is a valid URL, do some processing so that the bot can understand the link
+                    part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
+            } else {
+                console.log("oansdojnasdfd")
+                part = args;
+            } 
+        } catch (error) {
+            console.error(error);
         }
+
+        */
+
+
 
 
         try {
+        console.log("asdasdsad")
             var video = await videoFinder(part.join(' '));
+        console.log("asdasdsad")
+
         } catch (error) {
             console.log(error)
         }
@@ -74,6 +96,8 @@ module.exports = {
         if(queue == false || queue[1].queueEntries.length == 0) {
             //No queue exists
             //Add video to queue
+            console.log("ijanssdf")
+
             if(!video) {message.channel.send("Video not found."); return;};
             try {
                 await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
