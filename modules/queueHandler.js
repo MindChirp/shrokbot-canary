@@ -19,7 +19,7 @@ function queueExists(guildId) {
 
 function insertToQueue(guildId, video, user) {
     return new Promise(async (resolve, reject)=>{
-
+        if(!video) {reject(new Error("No video")); return;}
         var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
 
         const dbTemplate = {

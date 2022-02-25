@@ -36,6 +36,7 @@ module.exports = {
 
         var x;
         for(let i = 0; i < list.length; i++) {
+            if(!list[i].video) continue;
             //Treat the video title
             var title = list[i].video.title;
             
