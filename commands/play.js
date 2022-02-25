@@ -33,7 +33,6 @@ module.exports = {
             return message.channel.send("Specify a link as well!");
         }
 
-        var connection = await vc.join();
         
 
         var videoFinder = async(query)=>{
@@ -81,6 +80,9 @@ module.exports = {
                 console.log(error);
             }
             //No queue
+            if(!video) {message.channel.send("Video not found."); return;};
+            var connection = await vc.join();
+
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
         } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
             //There is a queue
