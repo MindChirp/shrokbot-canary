@@ -74,13 +74,13 @@ module.exports = {
         if(queue == false || queue[1].queueEntries.length == 0) {
             //No queue exists
             //Add video to queue
+            if(!video) {message.channel.send("Video not found."); return;};
             try {
                 await queueHandler.insertToQueue(message.guild.id, video, message.member.user);
             } catch (error) {
                 console.log(error);
             }
             //No queue
-            if(!video) {message.channel.send("Video not found."); return;};
             var connection = await vc.join();
 
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
