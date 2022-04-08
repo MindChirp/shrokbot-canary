@@ -59,7 +59,7 @@ module.exports = {
 
         var part;
         part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
-
+        console.log(part);
         /*
         try {
             console.log(args[0]);
@@ -85,9 +85,7 @@ module.exports = {
 
 
         try {
-        console.log("asdasdsad")
             var video = await videoFinder(part.join(' '));
-        console.log("asdasdsad")
 
         } catch (error) {
             console.log(error)
