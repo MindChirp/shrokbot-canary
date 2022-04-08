@@ -43,46 +43,20 @@ module.exports = {
         }
 
         //Get the video
-        //Try to remove playlist link
-
-
         
-        function validURL(str) {
-            var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-            return !!pattern.test(str);
+        //Remove &list, &ab_channel from links
+        function processLink(link) {
+            return link.split("&list")[0];
         }
 
-        var part;
-        part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
-
-        
         try {
-            console.log(args[0]);
-            if(!validURL(args[0])) {
+            //Check if argument is a link here \/
+            if(args.join(" ").includes("https://www.youtube.com")) {
+                //Argument is a link
+                args = [processLink(args.join(" "))];;  
             }
-            if(validURL(args[0])) {
-
-                    //If the query is a valid URL, do some processing so that the bot can understand the link
-                    part = [args[0].toString().split("&list")[0].split("&ab_channel")[0]];
-            } else {
-                part = args;
-            } 
-        } catch (error) {
-            console.error(error);
-        }
-
-        
-
-
-
-
-        try {
-            var video = await videoFinder(part.join(' '));
+            //    /\
+            var video = await videoFinder(args.join(' '));
 
         } catch (error) {
             console.log(error)

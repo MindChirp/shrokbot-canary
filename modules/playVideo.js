@@ -42,7 +42,11 @@ async function playVideo({video, connection, ytdl, message, config}) {
             } else {
                 if(!message) return;
                 //Send embed
-                console.log(video)
+                video.title = video.title || "Unknown";
+                video.url = video.url || "Unknown";
+                video.image = video.image || undefined;
+                video.author = video.author || {name: "Unknown"};
+                video.timestamp = video.timestamp || "Unknown";
                 var embed = new MessageEmbed()
                 .setAuthor("Now playing", client.user.displayAvatarURL())
                 .setColor("#ffff00")
