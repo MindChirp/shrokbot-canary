@@ -53,7 +53,7 @@ module.exports = {
             //Check if argument is a link here \/
             if(args.join(" ").includes("https://www.youtube.com")) {
                 //Argument is a link
-                args = [processLink(args[0])];  
+                args = [processLink(args.join(" "))];;  
             }
             //    /\
             var video = await videoFinder(args.join(' '));
