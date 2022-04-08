@@ -46,13 +46,15 @@ module.exports = {
         
         //Remove &list, &ab_channel from links
         function processLink(link) {
-            var unwantedPieces = ["&list", "&ab_channel"];
-
+            return link.split("&list")[0];
         }
 
         try {
             //Check if argument is a link here \/
-
+            if(args.join(" ").includes("https://www.youtube.com")) {
+                //Argument is a link
+                args = [processLink(args[0])];  
+            }
             //    /\
             var video = await videoFinder(args.join(' '));
 
