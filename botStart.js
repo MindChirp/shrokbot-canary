@@ -1,8 +1,6 @@
 const { Client, Intents, Collection } = require("discord.js");
 const queueHandler = require("./modules/queueHandler");
 
-console.log("iuasdasdsa")
-
 const fs = require("fs");
 const { get } = require("http");
 const { start } = require("repl");
@@ -155,11 +153,9 @@ function startBot() {
             (()=>{
                 var y = x;
                 if(hours == y.hours && minutes == y.minutes && seconds == 00 && y.days != 0) {
-                    console.log(y);
                     var voiceChannel = client.client.channels.cache.get("263300337320853506");
                     if (!voiceChannel) return console.error("The channel does not exist! Check ID of channel");
                     voiceChannel.join().then(connection => {
-                        console.log(y);
                         const dispatcher = connection.play(y.file, {
                             volume: 1,
                         })

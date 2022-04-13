@@ -12,8 +12,6 @@ module.exports = {
         
         queueHandler.deleteFromQueue(message.guild.id, parseInt(args[0]))
         .then((video)=>{
-
-            console.log("VIDEO: ", video);
             var embed = new MessageEmbed()
             .setAuthor("Removed from queue", "https://cdn.discordapp.com/avatars/" + message.member.user.id + "/" + message.member.user.avatar + ".webp")
             .setColor('#eb4034')

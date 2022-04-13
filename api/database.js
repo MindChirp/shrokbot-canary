@@ -95,6 +95,7 @@ function addToQueue(guildId, video, user) {
         await Queue.findOneAndUpdate({guildId: guildId}, {entries: entries})
         .then(res=>{
             console.log(res);
+            resolve(res);
         })
         .catch(err=>{
             console.error(err);
