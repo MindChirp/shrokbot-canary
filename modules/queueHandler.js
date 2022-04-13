@@ -1,21 +1,24 @@
 const fs = require("fs-extra");
 const path = require("path");
+const { getGuildQueue, addToQueue, removeFromQueue, deleteGuildQueue } = require("../api/database");
 
-function queueExists(guildId) {
-    //Check if guild queue exists
+function fetchQueue(guildId) {
     return new Promise((resolve, reject)=>{
-        var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
-        fs.readFile(filePath, "utf8", (err, data)=>{
-            if(err) {resolve(false)};
-            try {
-                if(JSON.parse(data)[1].queueEntries.length == 0) {
-                    reject(false);
-                }
-                resolve([true, JSON.parse(data)]);
-            } catch (error) {
-                reject(false);
+        getGuildQueue(guildId)
+        .then(res=>{
+            if(res.status == 1) {
+                resolve(res.result);
             }
         })
+        .catch(res=>{
+            if(res.status != undefined){
+                if(res.status == 0) {
+                    resolve(undefined);
+                }
+            }   
+        })
+
+
     })
 }
 
@@ -25,82 +28,38 @@ function insertToQueue(guildId, video, user) {
         if(!video) {reject(new Error("No video")); return;}
         var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
 
-        const dbTemplate = {
-            queueEntries: []
-        }
-
-        //Check if queue database exists
-        var data;
-        var exists = await queueExists(guildId);
-        if(exists == false) {
-            //if the queue does not exist, create a suitable database
-            data = JSON.parse(JSON.stringify(dbTemplate));
-            data.queueEntries.push({video: video, user: user});
-            
-        } else {
-            //get the database contents
-            var contents = exists[1];
-            contents.queueEntries.push({video: video, user: user});
-            data = contents;
-        }
-
-        fs.writeFile(filePath, JSON.stringify(data, null, 4), (err)=>{
-            if(err) {
-                //Did not go well..
-                reject(err);
-            }
-
-            resolve();
+        addToQueue(guildId, video, user)
+        .then((res)=>{
+            console.log(res);
+            resolve(res);
         })
-        
+        .catch(err=>reject(err));
     })
 }
 
-function deleteFromQueue({guildId, video}) {
+function deleteFromQueue(guildId, index) {
     return new Promise(async (resolve, reject)=>{
-        var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
-        var exists = await queueExists(guildId);
-        if(exists[0] == true) {
-            var queue = exists[1].queueEntries;
-
-            for(let i = 0; i < queue.length; i++) {
-                console.log(queue[i].video.videoId, video.videoId);
-                if(queue[i].video.videoId == video.videoId) {
-                    queue.splice(i,1);
-                    break;
-                }
-            }
-
-            var data = {
-                queueEntries: queue
-            }
-            
-            fs.writeFile(filePath, JSON.stringify(data, null, 4), (err)=>{
-                if(err) {
-                    //Did not go well..
-                    reject(err);
-                }
-    
-                resolve();
-            })
-
-        }
+        removeFromQueue(guildId, index)
+        .then(res=>{
+            resolve(res) //Returns the queue
+        })
+        .catch(err=>{
+            reject(err);
+        })
     })
 }
 
 
 function deleteQueue(guildId) {
     return new Promise((resolve, reject)=>{
-        var filePath = path.join(path.dirname(__dirname), "database", "queue", "queue" + guildId + ".json");
-        fs.unlink(filePath, (err)=>{
-            if(err) {
-                //Oops
-                reject(err);
-            }
-
+        deleteGuildQueue(guildId)
+        .then(()=>{
             resolve();
+        })
+        .catch(err=>{
+            reject(err);
         })
     })
 }
 
-module.exports = { queueExists, insertToQueue, deleteQueue, deleteFromQueue };
+module.exports = { fetchQueue, insertToQueue, deleteQueue, deleteFromQueue };

@@ -15,10 +15,12 @@ module.exports = {
     async execute(message, args) {
 
         try {
-            var queue = await queueHandler.queueExists(message.guild.id);
+            var queue = await queueHandler.fetchQueue(message.guild.id);
         } catch (error) {
             console.error(error);
         }
+
+        queue = queue || {entries: [], guildId: message.guild.id};
 
 
         var vc = message.member.voice.channel;
@@ -63,7 +65,7 @@ module.exports = {
             console.log(error)
         }
         //Check if there are videos in queue
-        if(queue == false) {
+        if(queue.entries.length == 0) {
             //No queue exists
             //Add video to queue
 
@@ -77,7 +79,7 @@ module.exports = {
             var connection = await vc.join();
 
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
-        } else if(queue == true) {
+        } else if(queue) {
             //There is a queue
             //Add the new video
             if(!video) {message.channel.send("Video not found."); return;};
@@ -94,7 +96,7 @@ module.exports = {
 
             //Refresh the queue
             try {
-                var queue = await queueHandler.queueExists(message.guild.id);
+                var queue = await queueHandler.fetchQueue(message.guild.id);
             } catch (error) {
                 console.log("Could not refresh queue");                
             }
@@ -111,7 +113,7 @@ module.exports = {
                     {name: "Channel", value: video.author.name, inline:true},
                     {name: "Length", value: video.timestamp, inline:true},
                     {name: "Estimated time until playing", value: "Ur mom", inline: true},
-                    {name: "Position in queue", value: queue[1].queueEntries.length, inline:false}
+                    {name: "Position in queue", value: queue.entries.length, inline:false}
                 )
 
             message.channel.send(queueEmbed);

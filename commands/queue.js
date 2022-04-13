@@ -10,22 +10,23 @@ module.exports = {
     async execute(message, args) {
         //Get the queue
         try {
-            var queue = await queueHandler.queueExists(message.guild.id);
+            var queue = await queueHandler.fetchQueue(message.guild.id);
         } catch (error) {
             console.log(error);    
         }
 
-        console.log(queue)
+        console.log("QUEUE ", queue)
 
-
-        if(queue == false) {
+        queue = queue || {entries:[], guildId: message.guild.id};
+        
+        if(queue.entries.length == 0) {
             message.channel.send("There is no queue!");
             return;
         }
 
 
         var list = [];
-        var objs = queue[1].queueEntries;
+        var objs = queue.entries;
 
         for(let i = 0; i < objs.length; i++) {
             list.push(objs[i]);
