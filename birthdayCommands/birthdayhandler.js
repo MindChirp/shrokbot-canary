@@ -10,7 +10,7 @@ var updateConfigInterval = 1; //In minutes
 var Guild;
 
 function startBirthdayHandling() {
-    client = require("../bot.js").client;
+    client = require("../client").client;
     Guild = client.guilds.cache.get("263300337320853505");
     //playBirthdayWishes({"type":"link", "source": "https://www.youtube.com/watch?v=cpM3-j0pNPI"});
     setInterval(async ()=>{

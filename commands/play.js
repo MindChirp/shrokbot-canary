@@ -13,6 +13,7 @@ module.exports = {
     name: "play",
     description: "Plays music from YouTube",
     async execute(message, args) {
+
         try {
             var queue = await queueHandler.queueExists(message.guild.id);
         } catch (error) {
@@ -62,7 +63,7 @@ module.exports = {
             console.log(error)
         }
         //Check if there are videos in queue
-        if(queue == false || queue[1].queueEntries.length == 0) {
+        if(queue == false) {
             //No queue exists
             //Add video to queue
 
@@ -76,7 +77,7 @@ module.exports = {
             var connection = await vc.join();
 
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
-        } else if(queue[0] == true && queue[1].queueEntries.length > 0) {
+        } else if(queue == true) {
             //There is a queue
             //Add the new video
             if(!video) {message.channel.send("Video not found."); return;};

@@ -2,10 +2,11 @@ const queueHandler = require("../modules/queueHandler.js");
 const ytSearch = require("yt-search");
 const playingHandler = require("../modules/nowHandler.js");
 const { MessageEmbed } = require("discord.js");
+const ytdl = require("ytdl-core");
 
-async function playVideo({video, connection, ytdl, message, config}) {
+async function playVideo({video, connection, ytdl1 /*Not in use*/, message, config}) {
     return new Promise(async(resolve,reject)=>{
-        const { client } = require("../bot.js");
+        const { client } = require("../botStart");
 
         if(video) {
             async function playAudio() {
@@ -42,13 +43,14 @@ async function playVideo({video, connection, ytdl, message, config}) {
             } else {
                 if(!message) return;
                 //Send embed
+                
                 video.title = video.title || "Unknown";
                 video.url = video.url || "Unknown";
                 video.image = video.image || undefined;
                 video.author = video.author || {name: "Unknown"};
                 video.timestamp = video.timestamp || "Unknown";
                 var embed = new MessageEmbed()
-                .setAuthor("Now playing", client.user.displayAvatarURL())
+                .setAuthor("Now playing", client.client.user.displayAvatarURL())
                 .setColor("#ffff00")
                 .setTitle(video.title)
                 .setURL(video.url)

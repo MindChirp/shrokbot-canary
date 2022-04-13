@@ -2,15 +2,16 @@
   "name": "shrokbot",
   "version": "1.4.24",
   "description": "",
-  "main": "bot.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"node bot\" \"node api/api\""
+    "start": "node bot"
   },
   "author": "Frikk O. Larsen",
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
+    "@discordjs/voice": "^0.8.0",
     "auto-git-update": "^2.0.2",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
@@ -26,6 +27,7 @@
     "morgan": "^1.10.0",
     "opusscript": "0.0.8",
     "simple-oauth2": "^4.3.0",
+    "uuid": "^8.3.2",
     "xhr2": "^0.2.1",
     "xmlhttprequest": "^1.8.0",
     "yt-search": "^2.10.2",

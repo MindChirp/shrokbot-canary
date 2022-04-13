@@ -8,6 +8,9 @@ function queueExists(guildId) {
         fs.readFile(filePath, "utf8", (err, data)=>{
             if(err) {resolve(false)};
             try {
+                if(JSON.parse(data)[1].queueEntries.length == 0) {
+                    reject(false);
+                }
                 resolve([true, JSON.parse(data)]);
             } catch (error) {
                 reject(false);

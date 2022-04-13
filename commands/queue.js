@@ -15,8 +15,10 @@ module.exports = {
             console.log(error);    
         }
 
+        console.log(queue)
 
-        if(queue == false || queue[1].queueEntries.length == 0) {
+
+        if(queue == false) {
             message.channel.send("There is no queue!");
             return;
         }

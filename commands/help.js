@@ -20,7 +20,9 @@ module.exports = {
                 {name: prefix + "donkey",value:"Fun for the whole family"},
                 {name: prefix + "siwallah",value:"wollaaaaaah"},
                 {name: prefix + "rick",value:"You know what this is."},
-                {name: prefix + "song",value:"Play either a random song, or add an artist name to play a random song from that artist. `BETA`."}
+                {name: prefix + "song",value:"Play either a random song, or add an artist name to play a random song from that artist. `BETA`."},
+                {name: prefix + "clienttoken",value:"Generates a token to be used in the Shrokbot client"},
+                {name: prefix + "regeneratetoken",value:"Regenerates the shrokbot client token. This requires all clients to enter the new token."},
             )
 
             message.channel.send(embed);
