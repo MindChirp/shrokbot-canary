@@ -149,6 +149,7 @@ function startBot() {
         }
 
         var x;
+        if(!timestamps) return;
         for(x of timestamps) {
             (()=>{
                 var y = x;

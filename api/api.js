@@ -12,6 +12,7 @@ const databaseHandler = require("./database");
 const { guildTokenSchema } = require("./api-models");
 const { playVideo } = require("../modules/playVideo");
 const ytdl = require("ytdl-core");
+const { playVideoFromUrl } = require("./playVideo");
 //const { playVideoFromUrl1 } = require("../bot");
 
 
@@ -108,28 +109,13 @@ function startApi() {
 
         //Emit an event
         //eventEmitter.emit("api-song-play", {url: videoUrl, title: videoTitle, guildId: entry});
-        var { client } = require("../botStart");
-        var client = client.client;
-        var guild = client.guilds.cache.get(entry);
-        var voiceChannels = guild.voice || undefined;
-        if(!voiceChannels) {
-            res.status(500);
-            res.send("The bot is not connected to a voice channel");
-            return;
-        }
-
-        var channelId = guild.voice.channelID || undefined;
-
-
-        var vc = client.channels.cache.get(channelId);
-        const connection = await vc.join();
-
-        playVideo({video: {url: videoUrl}, connection: connection, config: {}})
-        .then((res)=>{
-            console.log(res);
+        playVideoFromUrl(videoUrl, videoTitle, entry)
+        .then(res=>{
+            res.status(200);
+            res.send(); //The video was played successfully
         })
-        .catch((err)=>{            
-            console.log(err);
+        .catch(err=>{
+
         })
 
         res.status(200);
