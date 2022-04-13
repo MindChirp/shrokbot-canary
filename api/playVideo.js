@@ -18,16 +18,18 @@ async function playVideoFromUrl(url, title, guildId) {
     */
 
     try {
-        var exists = await queueHandler.queueExists(guildId);
+        var queue = await queueHandler.queueExists(guildId);
     } catch (error) {
         console.error(error);
     }
 
-    console.log(exists);
+    queue = queue || {entries: [], guildId: guildId}
 
-    if(exists == false || exists[1].queueEntries.length == 0) {
+    if(queue.entries.length == 0) {
         //No queue
         
+    } else {
+
     }
 
 }

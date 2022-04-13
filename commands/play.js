@@ -81,7 +81,6 @@ module.exports = {
             playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
         } else if(queue.entries.length > 0) {
             //There is a queue
-            console.log("1");
             //Add the new video
             if(!video) {message.channel.send("Video not found."); return;};
 
@@ -93,8 +92,6 @@ module.exports = {
                 return;
             }
 
-            console.log("2");
-
 
             //Refresh the queue
             try {
@@ -102,8 +99,6 @@ module.exports = {
             } catch (error) {
                 console.log("Could not refresh queue");                
             }
-
-            console.log("3");
 
             //Create added to queue message
             var queueEmbed = new MessageEmbed()
