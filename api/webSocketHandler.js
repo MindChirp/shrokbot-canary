@@ -10,12 +10,9 @@ function handleWebSocketCommunication(ws) {
 
         var authorized = false;
         if(ws.guildToken) {authorized = true;}
-        var obj = {
-            status: 200,
-            message: "You are now authorized, and associated to a proper guild token",
-            authorized: authorized
-        }
-        ws.send(JSON.stringify(obj))
+
+        //Do some handling with the communication or something, i dunno
+        
 
     });
 }
@@ -55,6 +52,12 @@ function checkIfValidSocket(ws, message) {
             databaseHandler.checkForGuildId(guildToken)
             .then(res=>{
                 ws.guildToken = dat.guildToken;
+                var obj = {
+                    status: 200,
+                    message: "You are now authorized, and associated to a proper guild token",
+                    authorized: true
+                }
+                ws.send(JSON.stringify(obj))
                 resolve(true);
             })
             .catch(err=>{
