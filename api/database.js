@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
 const { Queue, Server } = require("./api-models");
 
-const pass = "0zwG5ZbB1VCf3xBa";
-mongoose.connect(`mongodb+srv://shrokbot:${pass}@shrokbot.omeyr.mongodb.net/shrokbot?retryWrites=true&w=majority`, {useNewUrlParser: true});
+try {
+    const pass = "0zwG5ZbB1VCf3xBa";
+    mongoose.connect(`mongodb+srv://shrokbot:${pass}@shrokbot.omeyr.mongodb.net/shrokbot?retryWrites=true&w=majority`, {useNewUrlParser: true});
+    
+} catch (error) {
+    console.log(error);
+}
 
 function connect() {
     return new Promise((resolve, reject)=>{
@@ -44,13 +49,18 @@ function checkForApiKey(guildId) {
 function checkForGuildId(guildToken) {
     return new Promise(async (resolve, reject)=>{
         if(mongoose.connection.readyState != 1) {console.log("Database not connected"); reject("Database not connected");}
-        if(!guildToken) reject("No guild id provided");
+        if(!guildToken) reject("No guild token provided");
         //if(mongoose.connection.readyState != 1) reject("Database not connected");
         
         //Search the mongoose database
-        var keys = await Server.find({guildToken:guildToken.toString()});
-        console.log("KEYS: ", keys);
+        try {
+            var keys = await Server.find({guildToken:guildToken.toString()});
+        } catch (error) {
+            reject(error);
+        }
+        //console.log("KEYS: ", keys);
         if(keys.length > 0) resolve(keys[0].guildId);
+
         reject("Does not exist");
 
     })

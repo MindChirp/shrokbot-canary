@@ -54,7 +54,9 @@ module.exports = {
 
             var truncated = trunc(title,40);
 
-            queueEmbed.addField("**`" + parseInt(i+1) + ".`**", truncated + " `" + list[i].video.timestamp + " | Requested by " + list[i].user.username+"`");
+            var username = list[i].user=="Shrokbot client"?"Client":list[i].user.username;
+
+            queueEmbed.addField("**`" + parseInt(i+1) + ".`**", truncated + " `" + list[i].video.timestamp + " | Requested by " + username +"`");
         }
         
         message.channel.send(queueEmbed);

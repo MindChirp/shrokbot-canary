@@ -13,6 +13,11 @@ const ytSearch = require("yt-search");
 */
 /**/
 
+async function videoFinder(query){
+    var videoResult = await ytSearch(query);
+    return (videoResult.videos.length > 1)?videoResult.videos[0]:null;
+}
+
 
 async function playVideoFromUrl(url, title, guildId) {
     return new Promise(async (resolve, reject)=>{
@@ -45,23 +50,26 @@ async function playVideoFromUrl(url, title, guildId) {
             var { client } = require("../botStart");
             client = client.client;
             var guild = client.guilds.cache.get(guildId);
-            var voiceChannels = guild.voice || undefined;
+            try {
+                var voiceChannels = guild.voice || undefined;
+            } catch (error) {
+                reject("The bot is not connected to a voice channel");
+                return;
+            }
             if(!voiceChannels) {
                 reject("The bot is not connected to a voice channel");
+                return;
             }
             
+            if(!guild.voice) {reject("The bot is not connected to a voice channel"); return;}
             var channelId = guild.voice.channelID || undefined;
             
-            if(!channelId) reject("The bot is not connected to a voice channel");
+            if(!channelId) {reject("The bot is not connected to a voice channel"); return;};
 
             var vc = client.channels.cache.get(channelId);
             const connection = await vc.join();
 
-            //Search for the url, and add it as a video object
-            var videoFinder = async(query)=>{
-                var videoResult = await ytSearch(query);
-                return (videoResult.videos.length > 1)?videoResult.videos[0]:null;
-            }
+            //Search for the url, and add it to the queue as a video object
             videoFinder(url)
             .then(res=>{
                 console.log(res);
@@ -78,6 +86,24 @@ async function playVideoFromUrl(url, title, guildId) {
                 console.log(err);
             })
         } else {
+            //Add to queue
+            videoFinder(url)
+            .then(res=>{
+                //Add the result to the queue
+                saveToQueue(res);
+            })
+
+
+            function saveToQueue(video) {
+                queueHandler.insertToQueue(guildId, video, "Shrokbot client")
+                .then(res=>{
+                    console.log(res);
+                    resolve(res);
+                })
+                .catch(err=>{
+                    reject(err);
+                })
+            }
 
         }
     })

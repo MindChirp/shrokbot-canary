@@ -75,34 +75,30 @@ async function playNextVideo({video, connection, ytdl, message}) {
     //video is the currently playing video
     //Remove the current video from queue
     try {
-        await queueHandler.deleteFromQueue({guildId: message.guild.id, video: video})       
+        await queueHandler.deleteFromQueue(message.guild.id, 0);       
     } catch (error) {
         console.log(error);
     }
 
     //Get new queue
     try {
-        var queue = await queueHandler.queueExists(message.guild.id);
+        var queue = await queueHandler.fetchQueue(message.guild.id);
     } catch (error) {
         console.log(error);
         message.channel.send("Could not play next video.");
         return;
     }
+    queue = queue || {entries: [], guildId: undefined};
 
-    if(queue == false) {
+    if(queue.entries.length == 0) {
         //There is no queue 
         var vc = message.member.voice.channel;
         vc.leave();
         message.channel.send("No more songs to play.");
         return;
-    } else if(queue[1].queueEntries.length == 0) {
-        var vc = message.member.voice.channel;
-        vc.leave();
-        message.channel.send("No more songs to play.");
-        return;
-    } else if(queue[1].queueEntries.length > 0) {
+    } else if(queue.entries.length > 0) {
         //Play the next video
-        playVideo({video: queue[1].queueEntries[0].video, connection: connection, ytdl: ytdl, message: message, config:{}});
+        playVideo({video: queue.entries[0].video, connection: connection, ytdl: ytdl, message: message, config:{}});
     }
 }
 

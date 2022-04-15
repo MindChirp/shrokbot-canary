@@ -1,5 +1,6 @@
 const bodyParser = require("body-parser");
 const express = require("express");
+const WebSocket = require("ws");
 
 const cors = require('cors');
 const helmet = require('helmet');
@@ -13,6 +14,7 @@ const { guildTokenSchema } = require("./api-models");
 const { playVideo } = require("../modules/playVideo");
 const ytdl = require("ytdl-core");
 const { playVideoFromUrl } = require("./playVideo");
+const { handleWebSocketCommunication } = require("./webSocketHandler");
 //const { playVideoFromUrl1 } = require("../bot");
 
 
@@ -110,16 +112,15 @@ function startApi() {
         //Emit an event
         //eventEmitter.emit("api-song-play", {url: videoUrl, title: videoTitle, guildId: entry});
         playVideoFromUrl(videoUrl, videoTitle, entry)
-        .then(res=>{
+        .then(result=>{
             res.status(200);
             res.send(); //The video was played successfully
         })
         .catch(err=>{
-
+            console.log(err);
+            res.status(500);
+            res.send("Could not play the song");
         })
-
-        res.status(200);
-        res.send();
     })
 
 
@@ -157,6 +158,18 @@ function startApi() {
         console.log("Shrokbot API listening at http://%s:%s", host, port);
     })
 
+
+
+
+
+    //Set up websocket server for quick, real-time event based communication
+    const wss = new WebSocket.Server({server});
+
+    wss.on("connection", (ws)=>{
+        //Handle the handshake when a client connects
+        handleWebSocketCommunication(ws);
+    })
+    
 }
 
 
