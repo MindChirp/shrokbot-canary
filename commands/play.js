@@ -78,7 +78,7 @@ module.exports = {
             //No queue
             var connection = await vc.join();
 
-            playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}});
+            playVideo({video:video, connection:connection, ytdl:ytdl, message:message, config: {}, guildId: message.guild.id});
         } else if(queue.entries.length > 0) {
             //There is a queue
             //Add the new video

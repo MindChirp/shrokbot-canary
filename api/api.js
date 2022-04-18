@@ -11,12 +11,14 @@ const mongoose = require("mongoose");
 const databaseHandler = require("./database");
 
 const { guildTokenSchema } = require("./api-models");
-const { playVideo } = require("../modules/playVideo");
 const ytdl = require("ytdl-core");
 const { playVideoFromUrl } = require("./playVideo");
 const { handleWebSocketCommunication } = require("./webSocketHandler");
 //const { playVideoFromUrl1 } = require("../bot");
 
+const webSocketServer = {
+    wss: undefined
+}
 
 function startApi() {
 
@@ -164,7 +166,7 @@ function startApi() {
 
     //Set up websocket server for quick, real-time event based communication
     const wss = new WebSocket.Server({server});
-
+    webSocketServer.wss = wss;
     wss.on("connection", (ws)=>{
         //Handle the handshake when a client connects
         handleWebSocketCommunication(ws);
@@ -173,4 +175,8 @@ function startApi() {
 }
 
 
-module.exports = { startApi };
+
+
+
+
+module.exports = { startApi, webSocketServer };

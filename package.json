@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bot"
+    "start": "node --trace-warnings bot"
   },
   "author": "Frikk O. Larsen",
   "license": "ISC",

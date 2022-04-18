@@ -3,8 +3,9 @@ const ytSearch = require("yt-search");
 const playingHandler = require("../modules/nowHandler.js");
 const { MessageEmbed } = require("discord.js");
 const ytdl = require("ytdl-core");
+const { sendSocketPlayStatus } = require("../api/transmitter.js");
 
-async function playVideo({video, connection, ytdl1 /*Not in use*/, message, config}) {
+async function playVideo({video, connection, ytdl1 /*Not in use*/, message, config, guildId}) {
     return new Promise(async(resolve,reject)=>{
         const { client } = require("../botStart");
 
@@ -15,11 +16,18 @@ async function playVideo({video, connection, ytdl1 /*Not in use*/, message, conf
                 .on("finish", async ()=>{
                     if(!message) {
                         //Return promise as resolved
+
                         resolve();
                     } else {
                         playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
                     }
                 })
+
+                //Send a message to every socket belonging to this guild, informing
+                //of what song is being played
+                if(guildId){
+                    sendSocketPlayStatus(video, guildId);
+                }
 
                 
 

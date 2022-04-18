@@ -51,6 +51,7 @@ function checkIfValidSocket(ws, message) {
             //Check if this token exists in the database
             databaseHandler.checkForGuildId(guildToken)
             .then(res=>{
+                console.log("YESYESYES")
                 ws.guildToken = dat.guildToken;
                 var obj = {
                     status: 200,
@@ -66,6 +67,8 @@ function checkIfValidSocket(ws, message) {
                 resolve(false);
             })
 
+        } else {
+            return true;
         }
     }) 
 
