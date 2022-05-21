@@ -1,26 +1,34 @@
 const databaseHandler = require("./database");
+const { interpretQuery } = require("./websocketActions");
 
 function handleWebSocketCommunication(ws) {
     if(!ws) return;
     
     ws.on("message", async (message)=>{
         var valid = await checkIfValidSocket(ws, message); //Automatically warns client that they are not authorized
-        console.log("VALID?: " + valid)
         if(!valid) return;
 
         var authorized = false;
         if(ws.guildToken) {authorized = true;}
 
         //Do some handling with the communication or something, i dunno
-        
+        try {
+            var qry = JSON.parse(message);
+        } catch (error) {
+            console.error(error);
+        }
+        interpretQuery(qry);
 
     });
+
+    ws.on("close", function(){
+        //Do something..?
+    })
 }
 
 
 function checkIfValidSocket(ws, message) {
     return new Promise((resolve, reject)=>{
-
         if(!ws.guildToken) {
 
             if(!message) {sendUnauthorizedWarning(ws); return;}
@@ -51,7 +59,6 @@ function checkIfValidSocket(ws, message) {
             //Check if this token exists in the database
             databaseHandler.checkForGuildId(guildToken)
             .then(res=>{
-                console.log("YESYESYES")
                 ws.guildToken = dat.guildToken;
                 var obj = {
                     status: 200,

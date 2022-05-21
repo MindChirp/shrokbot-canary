@@ -1,4 +1,3 @@
-const fs = require("fs-extra");
 const path = require("path");
 const { getGuildQueue, addToQueue, removeFromQueue, deleteGuildQueue } = require("../api/database");
 
@@ -29,7 +28,7 @@ function insertToQueue(guildId, video, user) {
 
         addToQueue(guildId, video, user)
         .then((res)=>{
-            console.log(res);
+            //console.log(res);
             resolve(res);
         })
         .catch(err=>reject(err));

@@ -21,12 +21,8 @@ module.exports = {
             console.log(error);
         }
 
-        //remove the queue database
-        try {
-            await playingHandler.deletePlaying(message.guild.id);
-        } catch (error) {
-            console.log(error);
-        }
+        sendSocketPlayStatus(undefined, message.guild.id);
+
         
         //await message.delete();
         await vc.leave();

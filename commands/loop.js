@@ -1,6 +1,5 @@
 const {prefix, token} = require('../config.json');
 const { Permissions } = require("discord.js");
-const fs = require("fs-extra");
 module.exports = {
     name: "loop",
     description: "Loops the playing song",

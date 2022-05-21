@@ -165,7 +165,7 @@ function startApi() {
 
 
     //Set up websocket server for quick, real-time event based communication
-    const wss = new WebSocket.Server({server});
+    const wss = new WebSocket.Server({server: server});
     webSocketServer.wss = wss;
     wss.on("connection", (ws)=>{
         //Handle the handshake when a client connects

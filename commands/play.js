@@ -1,11 +1,9 @@
 const {prefix, token} = require('../config.json');
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
-const fs = require("fs-extra");
 const path = require("path");
 const { MessageEmbed } = require("discord.js");
 const queueHandler = require("../modules/queueHandler.js");
-const playingHandler = require("../modules/nowHandler.js");
 const { playVideo } = require("../modules/playVideo.js");
 
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Queue, Server } = require("./api-models");
+const { v4: uuidv4, v4 } = require('uuid');
 
 try {
     const pass = "0zwG5ZbB1VCf3xBa";
@@ -28,10 +29,10 @@ function checkForApiKey(guildId) {
         
         //Search the mongoose database
         var keys = await Server.find({guildId:guildId.toString()});
-        if(keys.length > 0) reject("Key already exists");
+        if(keys.length > 0) resolve(keys[0].guildToken);
 
         //Generate uuid
-        var id = uuid();
+        var id = v4();
         //Write to server
         var tokenPair = new Server({guildId: guildId, guildToken: id});
         tokenPair.save()
@@ -73,7 +74,7 @@ function getGuildQueue(guildId) {
         if(!guildId) {reject("No guild id provided")};
 
         var queue = await Queue.find({guildId: guildId});
-        console.log(queue);
+        //console.log(queue);
         if(queue.length > 0) {
             resolve({status: 1, result: queue[0]});
         }
@@ -91,7 +92,6 @@ function addToQueue(guildId, video, user) {
         if(!user) {reject("No user object present")};
 
         var queue = await Queue.find({guildId: guildId});
-        console.log("QUEUE: ", queue);
         var entries;
         if(queue.length == 0 || !queue) {
             var queue = new Queue({entries:[{video: video, user: user}], guildId: guildId});
@@ -104,7 +104,6 @@ function addToQueue(guildId, video, user) {
         entries.push({video: video, user: user});
         await Queue.findOneAndUpdate({guildId: guildId}, {entries: entries})
         .then(res=>{
-            console.log(res);
             resolve(res);
         })
         .catch(err=>{
@@ -132,7 +131,6 @@ function removeFromQueue(guildId, index) {
         .catch(err=>{
             reject(err);
         })
-        console.log(queue[0].entries);
 
     })
 }

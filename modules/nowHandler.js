@@ -4,6 +4,7 @@ const path = require("path");
 function nowExists(guildId) {
     //Check if guild queue exists
     return new Promise((resolve, reject)=>{
+        reject(new Error("This function is deprecated"));
         var filePath = path.join(path.dirname(__dirname), "database", "playing", "playing" + guildId + ".json");
         fs.readFile(filePath, "utf8", (err, data)=>{
             if(err) {resolve(false)};
@@ -19,7 +20,7 @@ function nowExists(guildId) {
 
 function insertToPlaying(guildId, video, user) {
     return new Promise(async (resolve, reject)=>{
-
+        reject(new Error("This function is deprecated"));
         var filePath = path.join(path.dirname(__dirname), "database", "playing", "playing" + guildId + ".json");
 
         const dbTemplate = {
@@ -45,6 +46,8 @@ function insertToPlaying(guildId, video, user) {
 
 function deletePlaying(guildId) {
     return new Promise((resolve, reject)=>{
+        reject(new Error("This function is deprecated"));
+
         var filePath = path.join(path.dirname(__dirname), "database", "playing", "playing" + guildId + ".json");
         fs.unlink(filePath, (err)=>{
             if(err) {

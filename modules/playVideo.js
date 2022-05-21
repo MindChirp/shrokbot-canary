@@ -14,32 +14,20 @@ async function playVideo({video, connection, ytdl1 /*Not in use*/, message, conf
                 var stream = ytdl(video.url, {filter:'audioonly'});
                 connection.play(stream, {seek: config.seek||0, volume: 1})
                 .on("finish", async ()=>{
-                    if(!message) {
+                    if(!message && !guildId) {
                         //Return promise as resolved
 
                         resolve();
                     } else {
-                        playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl});
+                        playNextVideo({video:video, message:message, connection:connection, ytdl:ytdl, guildId: guildId});
                     }
                 })
 
                 //Send a message to every socket belonging to this guild, informing
                 //of what song is being played
                 if(guildId){
+                    console.log("UR MOMMA", video, guildId);
                     sendSocketPlayStatus(video, guildId);
-                }
-
-                
-
-
-
-                //Insert the currently playing video
-                if(message) {
-                    try {
-                        await playingHandler.insertToPlaying(message.guild.id, video, message.member.user);
-                    } catch (error) {
-                        console.log(error);                            
-                    }
                 }
 
                 
@@ -79,7 +67,7 @@ async function playVideo({video, connection, ytdl1 /*Not in use*/, message, conf
 
 }
 
-async function playNextVideo({video, connection, ytdl, message}) {
+async function playNextVideo({video, connection, ytdl, message, guildId}) {
     //video is the currently playing video
     //Remove the current video from queue
     try {
@@ -92,6 +80,7 @@ async function playNextVideo({video, connection, ytdl, message}) {
     try {
         var queue = await queueHandler.fetchQueue(message.guild.id);
     } catch (error) {
+        if(!message) return;
         console.log(error);
         message.channel.send("Could not play next video.");
         return;
@@ -99,6 +88,13 @@ async function playNextVideo({video, connection, ytdl, message}) {
     queue = queue || {entries: [], guildId: undefined};
 
     if(queue.entries.length == 0) {
+        //Inform all clients
+
+        if(guildId) {
+            sendSocketPlayStatus(undefined, guildId);
+        }
+
+        if(!message) return;
         //There is no queue 
         var vc = message.member.voice.channel;
         vc.leave();
@@ -106,7 +102,7 @@ async function playNextVideo({video, connection, ytdl, message}) {
         return;
     } else if(queue.entries.length > 0) {
         //Play the next video
-        playVideo({video: queue.entries[0].video, connection: connection, ytdl: ytdl, message: message, config:{}});
+        playVideo({video: queue.entries[0].video, connection: connection, ytdl: ytdl, message: message, config:{}, guildId: guildId});
     }
 }
 

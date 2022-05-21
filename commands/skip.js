@@ -28,7 +28,7 @@ module.exports = {
         } else if(now.entries.length > 0) {
             var vc = message.member.voice.channel;
             var connection = await vc.join();
-            playNextVideo({video: now.entries[0].video, connection: connection, ytdl: ytdl, message: message});
+            playNextVideo({video: now.entries[0].video, connection: connection, ytdl: ytdl, message: message, guildId: message.guild.id});
         }
     }
 }

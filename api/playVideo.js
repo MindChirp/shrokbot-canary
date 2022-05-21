@@ -72,7 +72,7 @@ async function playVideoFromUrl(url, title, guildId) {
             //Search for the url, and add it to the queue as a video object
             videoFinder(url)
             .then(res=>{
-                console.log(res);
+                //console.log(res);
             })
             
 
@@ -80,7 +80,7 @@ async function playVideoFromUrl(url, title, guildId) {
             //Play the video directly
             playVideo({video: {url: url}, connection: connection, config: {}})
             .then((res)=>{
-                console.log(res);
+                //console.log(res);
             })
             .catch((err)=>{            
                 console.log(err);
@@ -90,6 +90,7 @@ async function playVideoFromUrl(url, title, guildId) {
             videoFinder(url)
             .then(res=>{
                 //Add the result to the queue
+                if(!res) return;
                 saveToQueue(res);
             })
 
@@ -97,7 +98,7 @@ async function playVideoFromUrl(url, title, guildId) {
             function saveToQueue(video) {
                 queueHandler.insertToQueue(guildId, video, "Shrokbot client")
                 .then(res=>{
-                    console.log(res);
+                    //console.log(res);
                     resolve(res);
                 })
                 .catch(err=>{

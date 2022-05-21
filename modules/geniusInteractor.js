@@ -17,7 +17,7 @@ function getRandomInt(max) { //min: 0, max: max
 function getRandom() {
     return new Promise((resolve, reject)=>{
 
-        console.log(getRandomInt(maxSongNumber));
+        //console.log(getRandomInt(maxSongNumber));
         var xhr = new XMLHttpRequest();
         xhr.open("GET", API + "/" + getRandomInt(maxSongNumber) + accessToken);
         xhr.send();
@@ -27,7 +27,7 @@ function getRandom() {
                 //OK
                 resolve(this.responseText);
             } else if(this.readyState == 4 && this.status != 200) {
-                console.log(this.responseText);
+                //console.log(this.responseText);
                 reject(this.responseText);
             }
         }  
@@ -55,7 +55,7 @@ function getByArtist(artist) {
                     resolve(song);
 
                 } else if(this.readyState == 4 && this.status != 200) {
-                    console.log(this.responseText);
+                    //console.log(this.responseText);
                     reject(this.responseText);
                 }
             }
