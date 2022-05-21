@@ -1,5 +1,5 @@
 const databaseHandler = require("./database");
-const { interpretQuery } = require("./websocketActions");
+const { interperetQuery } = require("./websocketActions");
 
 function handleWebSocketCommunication(ws) {
     if(!ws) return;
@@ -17,7 +17,10 @@ function handleWebSocketCommunication(ws) {
         } catch (error) {
             console.error(error);
         }
-        interpretQuery(qry);
+
+        
+
+        interperetQuery(qry, ws);
 
     });
 
