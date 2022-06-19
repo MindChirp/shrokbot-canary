@@ -71,7 +71,11 @@ async function playNextVideo({video, connection, ytdl, message, guildId}) {
     //video is the currently playing video
     //Remove the current video from queue
     try {
-        await queueHandler.deleteFromQueue(message.guild.id, 0);       
+        if(message) {
+            await queueHandler.deleteFromQueue(message.guild.id, 0);       
+        } else if(guildId) {
+            await queueHandler.deleteFromQueue(guildId, 0);       
+        }
     } catch (error) {
         console.log(error);
     }
@@ -90,6 +94,7 @@ async function playNextVideo({video, connection, ytdl, message, guildId}) {
     if(queue.entries.length == 0) {
         //Inform all clients
 
+        //If there is a guild id present, let clients know that the queue is empty
         if(guildId) {
             sendSocketPlayStatus(undefined, guildId);
         }

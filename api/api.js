@@ -67,7 +67,7 @@ function startApi() {
         var videoTitle = body.songTitle || undefined;
         var creator = body.creator || undefined;
         var guildToken = body.guildToken || undefined;
-
+        var userId = body.userId;
 
         if(!videoTitle) {
             //Did not go well, return error 
@@ -84,6 +84,11 @@ function startApi() {
         if(!guildToken) {
             res.status(400)
             res.send("No guild token is present. There must be one present to play a song.")
+        }
+
+        if(!userId) {
+            res.status(400);
+            res.send("No user id is present.");
         }
 
         //Check if the guild token is valid
@@ -113,7 +118,7 @@ function startApi() {
 
         //Emit an event
         //eventEmitter.emit("api-song-play", {url: videoUrl, title: videoTitle, guildId: entry});
-        playVideoFromUrl(videoUrl, videoTitle, entry)
+        playVideoFromUrl(videoUrl, videoTitle, entry, userId)
         .then(result=>{
             res.status(200);
             res.send(); //The video was played successfully

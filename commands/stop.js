@@ -5,6 +5,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const queueHandler = require("../modules/queueHandler.js");
 const playingHandler = require("../modules/nowHandler.js");
+const { sendSocketPlayStatus } = require('../api/transmitter');
 
 module.exports = {
     name: "stop",

@@ -19,7 +19,7 @@ async function videoFinder(query){
 }
 
 
-async function playVideoFromUrl(url, title, guildId) {
+async function playVideoFromUrl(url, title, guildId, userId) {
     return new Promise(async (resolve, reject)=>{
 
         if(!guildId) return;
@@ -56,18 +56,28 @@ async function playVideoFromUrl(url, title, guildId) {
                 reject("The bot is not connected to a voice channel");
                 return;
             }
-            if(!voiceChannels) {
-                reject("The bot is not connected to a voice channel");
+
+            var connection;
+
+            if(!voiceChannels && userId) {
+                //The bot is not connected to a voice channel.
+                //Connect the bot to the cannel that the user is in
+                var member = await guild.members.cache.get(userId);
+                if(!member.voice.channel) return;
+
+                var vc = member.voice.channel;
+                connection = await vc.join();
+
+            } else if(!voiceChannels && !guildId) {
+                reject("The bot is not connected to a voice channel"); 
                 return;
+
+            } else if(voiceChannels && !guildId) {
+                var id = voiceChannels.channelID;
+                var vc = client.channels.cache.get(id);
+                connection = await vc.join();
             }
             
-            if(!guild.voice) {reject("The bot is not connected to a voice channel"); return;}
-            var channelId = guild.voice.channelID || undefined;
-            
-            if(!channelId) {reject("The bot is not connected to a voice channel"); return;};
-
-            var vc = client.channels.cache.get(channelId);
-            const connection = await vc.join();
 
             //Search for the url, and add it to the queue as a video object
             videoFinder(url)

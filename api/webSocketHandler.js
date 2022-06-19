@@ -6,6 +6,7 @@ function handleWebSocketCommunication(ws) {
     
     ws.on("message", async (message)=>{
         var valid = await checkIfValidSocket(ws, message); //Automatically warns client that they are not authorized
+        console.log(valid)
         if(!valid) return;
 
         var authorized = false;
@@ -51,9 +52,9 @@ function checkIfValidSocket(ws, message) {
                 resolve(false);
             }
 
-            dat = dat || {guildToken: undefined};
+            dat = dat || {guildToken: undefined, userId: undefined};
 
-            if(!dat.guildToken) {
+            if(!dat.guildToken || dat.userId) {
                 sendUnauthorizedWarning(ws);
                 resolve(false);
             }
@@ -63,6 +64,7 @@ function checkIfValidSocket(ws, message) {
             databaseHandler.checkForGuildId(guildToken)
             .then(res=>{
                 ws.guildToken = dat.guildToken;
+                ws.userId = dat.userId;
                 var obj = {
                     status: 200,
                     message: "You are now authorized, and associated to a proper guild token",
@@ -78,7 +80,7 @@ function checkIfValidSocket(ws, message) {
             })
 
         } else {
-            return true;
+            resolve(true);
         }
     }) 
 
