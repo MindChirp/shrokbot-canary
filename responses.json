@@ -1,9 +1,0 @@
-{
-    "genericError": ["Something went wrong"],
-    "wordNotAscii": ["This looks like greek to me!", "Maybe put it in a language I can understand?", "Uhhh... What are you trying to say... Exactly?", "Maybe try to save on the spice?"],
-    "bannedWordAdded": ["Woah, slow down there! I'm not allowed to say that", "STOP! You've violated the law! Pay your fine or do your time in jail. Your stolen goods are now forfeit",
-    "Hold it right there, criminal scum!"],
-    "topic": ["Here's your topic!", "Maybe talk about this?", "Here's a conversation piece:",
-    "Here's something to ease the tension!", "Here's something to talk to your girl about:"]
-
-}
