@@ -15,7 +15,7 @@ function searchResults(list) {
   // Create a result list based on the provided list
   if (list.length == 0) {
     // Create a simple message
-    const embed = new EmbedBuilder().setColor(0x0099ff).addFields({
+    const embed = new EmbedBuilder().setColor(0xe803fc).addFields({
       name: 'No results found.',
       value: 'Sorry! No results were found for the given query.',
     });
@@ -29,7 +29,7 @@ function searchResults(list) {
     string += '\n' + (i + 1) + ': ' + list[i].title.slice(0, 40);
   }
 
-  const embed = new EmbedBuilder().setColor(0x0099ff).addFields({
+  const embed = new EmbedBuilder().setColor(0xe803fc).addFields({
     name: 'Search results',
     value: string,
   });

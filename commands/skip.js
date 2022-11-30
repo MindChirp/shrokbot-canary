@@ -16,6 +16,11 @@ module.exports = {
       (object) => object.getGuildId() === guildId
     );
 
+    if (filtered.length == 0) {
+      interaction.editReply('The bot must be connected to a voice channel!');
+      return;
+    }
+
     if (filtered[0].getQueue().length > 0) {
       filtered[0].skip();
       interaction.editReply('The current song is skipped!');

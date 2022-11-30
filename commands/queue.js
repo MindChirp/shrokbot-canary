@@ -36,8 +36,14 @@ module.exports = {
 
     let i = 0;
     for (const video of queue) {
+      let name;
+      if (i == 0) {
+        name = 'Currently playing';
+      } else {
+        name = i + '';
+      }
+      embed.addFields({name: name, value: video.title});
       i++;
-      embed.addFields({name: i + '', value: video.title});
     }
 
     interaction.editReply({

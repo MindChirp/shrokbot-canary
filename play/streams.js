@@ -10,6 +10,7 @@ const {
 const {v4: uuidv4} = require('uuid');
 
 const ytdl = require('ytdl-core-discord');
+const {nowPlayingEmbed} = require('./nowPlayingEmbed');
 
 const GuildVoiceClasses = [];
 
@@ -28,13 +29,16 @@ class GuildStream {
   #player;
   #queue = [];
   #uuid;
+  #chatId;
+  #continueOnEnd = true;
 
   /**
    *
    * @param {string} guildId The guild id to associate the connection with
+   * @param {string} chatId The id of the text channel to send queue updates in
    * @param {Client} client The bot client
    */
-  constructor(guildId, client) {
+  constructor(guildId, chatId, client) {
     if (typeof guildId != 'string') {
       throw new TypeError('Invalid type, guild id must be a string');
     }
@@ -43,6 +47,8 @@ class GuildStream {
 
     this.#guildId = guildId;
     this.#client = client;
+    this.#chatId = chatId;
+
     this.#uuid = uuidv4();
   }
 
@@ -176,7 +182,7 @@ class GuildStream {
   /**
    * Plays music from the current queue
    */
-  play() {
+  async play() {
     if (this.#queue.length == 0) {
       return;
     }
@@ -187,8 +193,23 @@ class GuildStream {
 
     // get first entry in the queue
     const firstInQueue = this.#queue[0];
+
+    // Notify a text channel when video starts playing
+    const nowPlaying = nowPlayingEmbed(firstInQueue, this.#client);
+    const textChannel = this.#client.guilds.cache
+      .get(this.#guildId)
+      .channels.cache.get(this.#chatId);
+    textChannel.send({
+      embeds: [nowPlaying],
+    });
+
     this.playVideo(firstInQueue).then(() => {
       // Remove the first entry
+      if (!this.#continueOnEnd) {
+        this.#continueOnEnd = true;
+        return;
+      }
+
       console.log('Moving over to the next video');
       this.#queue.shift();
       this.play();
@@ -207,6 +228,28 @@ class GuildStream {
   }
 
   /**
+   * Insert the given video to a specific index in the queue
+   *
+   * @param {object} video A youtube video
+   * @param {number} index The index to insert at
+   */
+  insertToQueue(video, index) {
+    const uuid = uuidv4();
+    video.queueUUID = uuid;
+    this.#queue.splice(index, 0, video);
+  }
+
+  /**
+   * Removes an entry in the queue
+   *
+   * @param {number} index Index to remove
+   */
+  removeFromQueue(index) {
+    if (index > this.#queue.length) throw new RangeError('Index out of range!');
+    this.#queue.splice(index, 1);
+  }
+
+  /**
    * Disconnects the bot from the voice channel, and stops the playback
    */
   stop() {
@@ -220,12 +263,14 @@ class GuildStream {
    * Skips the current song
    */
   skip() {
-    // this.#player.stop();
     this.#queue.shift();
     if (this.#queue.length == 0) {
       this.stop();
       return;
     }
+
+    this.#continueOnEnd = false;
+
     this.play();
   }
 
@@ -254,6 +299,23 @@ class GuildStream {
    */
   getConnection() {
     return this.#connection;
+  }
+
+  /**
+   * Resets connections
+   */
+  resetConnections() {
+    try {
+      this.#player.stop();
+    } catch (error) {}
+    this.queue = [];
+
+    if (this.#connection) {
+      this.#connection.destroy();
+    }
+
+    this.#connection = undefined;
+    this.#continueOnEnd = true;
   }
 }
 

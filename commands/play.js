@@ -1,6 +1,6 @@
 const {SlashCommandBuilder} = require('discord.js');
 const {collectors} = require('../play/collectors');
-const {nowPlayingEmbed} = require('../play/nowPlayingEmbed');
+const {addedToQueueEmbed} = require('../play/addedToQueueEmbed');
 const {searchResults} = require('../play/searchEmbed');
 const {youtubeSearch} = require('../play/youtubeSearch');
 const {v4: uuidv4} = require('uuid');
@@ -40,65 +40,67 @@ module.exports = {
       return;
     }
 
+    // Check if there already exists a guildstream handler for this guild
+    const guildStreams = GuildVoiceClasses;
+    const filtered = guildStreams.filter(
+      (object) => object.getGuildId() === interaction.guildId
+    );
+
+    let guildStream;
+    if (filtered.length == 0) {
+      // Create a guild stream handler for this guild
+      guildStream = new GuildStream(
+        interaction.guildId,
+        interaction.channelId,
+        client
+      );
+
+      GuildVoiceClasses.push(guildStream);
+    } else {
+      guildStream = filtered[0];
+    }
+
+    const user = interaction.member;
+
+    // Check if the user is connected to a voice channel
+    const channel = user.voice.channel;
+    if (!channel) {
+      // The user is not connected to a voice channel
+      await interaction.editReply({
+        content:
+          "Sorry, but it seems like you aren't connected to a voice channel.",
+        embeds: [],
+        components: [],
+      });
+
+      // Remove all collectors
+      removeCollector(collector);
+      return;
+    }
+
     // Search youtube
     const [list, video] = await youtubeSearch(query);
 
     // If the youtube search results is a single object, and not an array,
     if (video) {
-      // const nowPlaying = nowPlayingEmbed(video, client);
-
-      const nowPlaying = nowPlayingEmbed(video, client);
-      await interaction.editReply({
-        embeds: [nowPlaying],
-        components: [],
-      });
-
-      // Check if there already exists a guildstream handler for this guild
-      const guildStreams = GuildVoiceClasses;
-      for (guild of guildStreams) {
-        console.log(guild.getGuildId(), interaction.guildId);
-      }
-      const filtered = guildStreams.filter(
-        (object) => object.getGuildId() === interaction.guildId
-      );
-
-      let guildStream;
-      if (filtered.length == 0) {
-        console.log('CREATING GUILD HANDLER! AAAA');
-        // Create a guild stream handler for this guild
-        guildStream = new GuildStream(interaction.guildId, client);
-
-        GuildVoiceClasses.push(guildStream);
-      } else {
-        guildStream = filtered[0];
-      }
-
-      const user = interaction.member;
-      const channel = user.voice.channel;
-      if (!channel) {
-        // The user is not connected to a voice channel
-        await interaction.editReply({
-          content:
-            "Sorry, but it seems like you aren't connected to a voice channel.",
-          embeds: [],
-          components: [],
-        });
-
-        // Remove all collectors
-        removeCollector(collector);
-        return;
-      }
-
-      // Connect to the active voice channel
-      await guildStream.connectToVC(channel.id);
-
-      // Create an audio stream, and pipe it to the voice channel
       const selectedVideo = video;
       if (guildStream.getQueue().length > 0) {
         guildStream.addToQueue(selectedVideo);
       } else {
+        guildStream.connectToVC(channel.id);
         guildStream.addToQueue(selectedVideo);
         guildStream.play();
+      }
+
+      // Replace the old embed with an added to queue message
+      if (guildStream.getQueue().length > 1) {
+        const addedToQueue = addedToQueueEmbed(video, client);
+        await interaction.editReply({
+          embeds: [addedToQueue],
+          components: [],
+        });
+      } else {
+        await interaction.deleteReply();
       }
 
       return;
@@ -145,57 +147,26 @@ module.exports = {
         collector.stop();
         return;
       }
-      // Replace embed with now playing embed
-      const nowPlaying = nowPlayingEmbed(list[parseInt(i.customId)], client);
 
-      await interaction.editReply({
-        embeds: [nowPlaying],
-        components: [],
-      });
-
-      // Check if there already exists a guildstream handler for this guild
-      const guildStreams = GuildVoiceClasses;
-      for (guild of guildStreams) {
-      }
-      const filtered = guildStreams.filter(
-        (object) => object.getGuildId() === interaction.guildId
-      );
-
-      let guildStream;
-      if (filtered.length == 0) {
-        // Create a guild stream handler for this guild
-        guildStream = new GuildStream(interaction.guildId, client);
-        GuildVoiceClasses.push(guildStream);
-      } else {
-        guildStream = filtered[0];
-      }
-
-      const user = interaction.member;
-      const channel = user.voice.channel;
-      if (!channel) {
-        // The user is not connected to a voice channel
-        await interaction.editReply({
-          content:
-            "Sorry, but it seems like you aren't connected to a voice channel.",
-          embeds: [],
-          components: [],
-        });
-
-        // Remove all collectors
-        removeCollector(collector);
-        return;
-      }
-
-      // Connect to the active voice channel
-      await guildStream.connectToVC(channel.id);
-
-      // Create an audio stream, and pipe it to the voice channel
       const selectedVideo = list[parseInt(i.customId)];
+
       if (guildStream.getQueue().length > 0) {
         guildStream.addToQueue(selectedVideo);
       } else {
+        guildStream.connectToVC(channel.id);
         guildStream.addToQueue(selectedVideo);
         guildStream.play();
+      }
+
+      // Replace the old embed with an added to queue message if the queue is not empty
+      if (guildStream.getQueue().length > 1) {
+        const addedToQueue = addedToQueueEmbed(selectedVideo, client);
+        await interaction.editReply({
+          embeds: [addedToQueue],
+          components: [],
+        });
+      } else {
+        await interaction.deleteReply();
       }
     });
 
