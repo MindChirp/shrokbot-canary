@@ -165,7 +165,10 @@ class GuildStream {
       }
 
       // Create an audio source
-      const stream = await ytdl(video.url, {highWaterMark: 1 << 25});
+      console.log(video);
+      const stream = await ytdl(video.url, {
+        highWaterMark: 1 << 25,
+      });
       const resource = createAudioResource(stream);
 
       // Pipe the new audio source to the current voice channel
@@ -272,6 +275,13 @@ class GuildStream {
     this.#continueOnEnd = false;
 
     this.play();
+  }
+
+  /**
+   * Dumps the whole queue, except for the first entry
+   */
+  dumpQueue() {
+    this.#queue.splice(1, this.#queue.length);
   }
 
   /**
