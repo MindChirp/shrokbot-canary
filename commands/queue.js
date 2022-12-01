@@ -1,60 +1,54 @@
-const {prefix, token} = require('../config.json');
-const { MessageEmbed } = require("discord.js")
-const path = require("path");
-const queueHandler = require("../modules/queueHandler.js");
-
+const {SlashCommandBuilder, EmbedBuilder} = require('discord.js');
+const {GuildVoiceClasses} = require('../play/streams');
 
 module.exports = {
-    name: "queue",
-    description: "Shows the currently queued songs",
-    async execute(message, args) {
-        //Get the queue
-        try {
-            var queue = await queueHandler.queueExists(message.guild.id);
-        } catch (error) {
-            console.log(error);    
-        }
+  data: new SlashCommandBuilder()
+    .setName('queue')
+    .setDescription('Shows the current queue')
+    .setDMPermission(false),
 
+  async execute(interaction, client) {
+    await interaction.deferReply();
 
-        if(queue == false || queue[1].queueEntries.length == 0) {
-            message.channel.send("There is no queue!");
-            return;
-        }
+    // Get the correct guild voice class instance
+    const guildId = interaction.guildId;
+    const filtered = GuildVoiceClasses.filter(
+      (object) => object.getGuildId() === guildId
+    );
 
-
-        var list = [];
-        var objs = queue[1].queueEntries;
-
-        for(let i = 0; i < objs.length; i++) {
-            list.push(objs[i]);
-        }
-
-        //Create queue message
-        var queueEmbed = new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle('Your queue')
-
-        var x;
-        for(let i = 0; i < list.length; i++) {
-            if(!list[i].video) continue;
-            //Treat the video title
-            var title = list[i].video.title;
-            
-            function trunc(txt, length) {
-                var str = txt;
-                if(str.length > length) {
-                    return txt.slice(0,length) + "...";
-                } else {
-                    return txt;
-                }
-            }
-
-            var truncated = trunc(title,40);
-
-            queueEmbed.addField("**`" + parseInt(i+1) + ".`**", truncated + " `" + list[i].video.timestamp + " | Requested by " + list[i].user.username+"`");
-        }
-        
-        message.channel.send(queueEmbed);
-        
+    if (filtered.length == 0) {
+      interaction.editReply('There are no songs in the queue!');
+      return;
     }
-}
+    const guildStreamer = filtered[0];
+
+    const queue = guildStreamer.getQueue();
+
+    // Generate a queue list .O.
+    if (queue.length == 0) {
+      interaction.editReply('There are no songs in the queue!');
+      return;
+    }
+
+    const embed = new EmbedBuilder()
+      .setColor(0xe803fc)
+      .setTitle('Current queue');
+
+    let i = 0;
+    for (const video of queue) {
+      let name;
+      if (i == 0) {
+        name = 'Currently playing';
+      } else {
+        name = i + '';
+      }
+      embed.addFields({name: name, value: video.title});
+      i++;
+    }
+
+    interaction.editReply({
+      embeds: [embed],
+      components: [],
+    });
+  },
+};

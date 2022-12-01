@@ -3,8 +3,8 @@ const {GuildVoiceClasses} = require('../play/streams');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('skip')
-    .setDescription('Skips the current song')
+    .setName('clear')
+    .setDescription('Clears the current queue')
     .setDMPermission(false),
 
   async execute(interaction, client) {
@@ -21,11 +21,9 @@ module.exports = {
       return;
     }
 
-    if (filtered[0].getQueue().length > 0) {
-      filtered[0].skip();
-      interaction.editReply('The current song is skipped!');
-    } else {
-      interaction.editReply('There are no songs to skip!');
-    }
+    const guildStream = filtered[0];
+    guildStream.dumpQueue();
+
+    await interaction.editReply('The queue has been emptied!');
   },
 };

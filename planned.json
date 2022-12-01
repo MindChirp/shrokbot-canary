@@ -1,0 +1,6 @@
+{
+    "plannedFeatures": [
+        {"name": "Youtube playlist support", "importance": 2},
+        {"name": "Spotify support", "importance": 2}
+    ]
+}
