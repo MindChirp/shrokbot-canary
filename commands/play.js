@@ -158,6 +158,8 @@ module.exports = {
         guildStream.play();
       }
 
+      //
+
       // Replace the old embed with an added to queue message if the queue is not empty
       if (guildStream.getQueue().length > 1) {
         const addedToQueue = addedToQueueEmbed(selectedVideo, client);
