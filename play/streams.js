@@ -85,6 +85,31 @@ class GuildStream {
         resolve();
       });
 
+      connection.on(VoiceConnectionStatus.Disconnected, () => {
+        // The bot has been disconnected for whatever reason. Remove all references to it.
+        this.#connection = undefined;
+        if (this.#player) {
+          try {
+            this.#player.stop();
+          } catch (error) {
+            console.log(
+              'COULD NOT STOP PLAYER WHEN DISCONNECTED. PROBABLY NOT SERIOUS'
+            );
+            console.error(error);
+          }
+          this.#player = undefined;
+        }
+
+        // Delete the queue
+        this.#queue = [];
+
+        // Delete all voice channel references
+        this.#voiceChannel = undefined;
+
+        // Delete all text channel references
+        this.#chatId = undefined;
+      });
+
       this.#connection = connection;
     });
   }
@@ -220,6 +245,31 @@ class GuildStream {
   }
 
   /**
+   * Pauses the currently playing music
+   * @return {boolean} False for failure, true for success
+   */
+  pause() {
+    if (!this.#player) return false;
+    this.#player.pause();
+    return true;
+  }
+
+  /**
+   * Resumes the audio player
+   *
+   * @return {boolean} False for failure, true for success
+   */
+  resume() {
+    if (!this.#player) return false;
+    const state = this.#player.unpause();
+    if (state) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    *
    * @param {object} video The video to insert into the queue
    */
@@ -326,6 +376,18 @@ class GuildStream {
 
     this.#connection = undefined;
     this.#continueOnEnd = true;
+  }
+
+  /**
+   * Binds bot communication to the given text channel
+   *
+   * @param {string} chatId The new chat id
+   */
+  setChatId(chatId) {
+    if (typeof chatId != 'string')
+      throw new TypeError('ChatId must be a string!');
+
+    this.#chatId = chatId;
   }
 }
 
