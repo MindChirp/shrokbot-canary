@@ -353,6 +353,15 @@ class GuildStream {
   }
 
   /**
+   * Get the currently active voice channel
+   *
+   * @return {string} The voice channel id
+   */
+  getVoiceChannelId() {
+    return this.#voiceChannel;
+  }
+
+  /**
    * Get the current connection
    *
    * @return {Connection} The current active voice channel
@@ -388,6 +397,15 @@ class GuildStream {
       throw new TypeError('ChatId must be a string!');
 
     this.#chatId = chatId;
+  }
+
+  /**
+   *
+   * @return {string} The chat id belonging to the text
+   * channel used for communications
+   */
+  getChatId() {
+    return this.#chatId;
   }
 }
 

@@ -78,107 +78,146 @@ module.exports = {
       return;
     }
 
+    // Control guildStream chatId status
+    // (might be undefined if the bot has been disconnected from the voice channel)
+    const chat = guildStream.getChatId();
+    if (!chat) {
+      guildStream.setChatId(interaction.channelId);
+    }
+
     // Search youtube
-    const [list, video] = await youtubeSearch(query);
+    youtubeSearch(query).then(processSearchResult);
 
-    // If the youtube search results is a single object, and not an array,
-    if (video) {
-      const selectedVideo = video;
-      if (guildStream.getQueue().length > 0) {
-        guildStream.addToQueue(selectedVideo);
-      } else {
-        guildStream.connectToVC(channel.id);
-        guildStream.addToQueue(selectedVideo);
-        guildStream.play();
-      }
+    /**
+     * Handles the youtube search results
+     *
+     * @param {array} param0 Args
+     * @return {undefined}
+     */
+    async function processSearchResult([list, video]) {
+      // If the youtube search results is a single object, and not an array,
+      if (video) {
+        const selectedVideo = video;
+        if (guildStream.getQueue().length > 0) {
+          guildStream.addToQueue(selectedVideo);
+        } else {
+          guildStream.connectToVC(channel.id);
+          guildStream.addToQueue(selectedVideo);
+          guildStream.play();
+        }
 
-      // Replace the old embed with an added to queue message
-      if (guildStream.getQueue().length > 1) {
-        const addedToQueue = addedToQueueEmbed(video, client);
-        await interaction.editReply({
-          embeds: [addedToQueue],
-          components: [],
-        });
-      } else {
-        await interaction.deleteReply();
-      }
+        // Replace the old embed with an added to queue message
+        if (guildStream.getQueue().length > 1) {
+          const addedToQueue = addedToQueueEmbed(video, client);
+          await interaction.editReply({
+            embeds: [addedToQueue],
+            components: [],
+          });
+        } else {
+          await interaction.deleteReply();
+        }
 
-      return;
-    }
-
-    // Show an interactive chat message
-    const searchRes = await searchResults(list);
-
-    if (searchRes.length == 1) {
-      // Only show a message prompt, no buttons
-      await interaction.editReply({
-        embeds: [searchRes[0]],
-        components: [],
-      });
-    } else if (searchRes.length == 2) {
-      // Show an embed with list options
-      await interaction.editReply({
-        embeds: [searchRes[0]],
-        components: [searchRes[1]],
-      });
-    }
-
-    let embedHasBeenInteractedWith = false;
-
-    // Set up a collector to listen to the button presses
-    const collector = interaction.channel.createMessageComponentCollector({
-      time: 15000,
-      max: 1,
-    });
-
-    // Assign an uuid to the collector, and save it to a global collector array
-    collector.uuid = uuidv4();
-    addCollector(collector);
-
-    // Handle collector events
-    collector.on('collect', async (i) => {
-      // Update the embed interaction state
-      embedHasBeenInteractedWith = true;
-
-      if (i.customId == '5') {
-        // The cancel button has been pressed
-        await interaction.deleteReply();
-        removeCollector(collector);
-        collector.stop();
         return;
       }
 
-      const selectedVideo = list[parseInt(i.customId)];
+      // Show an interactive chat message
+      const searchRes = await searchResults(list);
 
-      if (guildStream.getQueue().length > 0) {
-        guildStream.addToQueue(selectedVideo);
-      } else {
-        guildStream.connectToVC(channel.id);
-        guildStream.addToQueue(selectedVideo);
-        guildStream.play();
+      handleResult(searchRes);
+      createCollector(list);
+
+      /**
+       * Handles the youtube search query result
+       * @param {EmbedBuilder} searchRes The searchRes embed to display in chat
+       */
+      async function handleResult(searchRes) {
+        if (searchRes.length == 1) {
+          // Only show a message prompt, no buttons
+          await interaction.editReply({
+            embeds: [searchRes[0]],
+            components: [],
+          });
+        } else if (searchRes.length == 2) {
+          // Show an embed with list options
+          await interaction.editReply({
+            embeds: [searchRes[0]],
+            components: [searchRes[1]],
+          });
+        }
       }
+    }
 
-      // Replace the old embed with an added to queue message if the queue is not empty
-      if (guildStream.getQueue().length > 1) {
-        const addedToQueue = addedToQueueEmbed(selectedVideo, client);
-        await interaction.editReply({
-          embeds: [addedToQueue],
-          components: [],
-        });
-      } else {
-        await interaction.deleteReply();
-      }
-    });
+    /**
+     * Creates a collector, enabling us to listen to button presses in chat
+     *
+     * @param {array} list List of videos from the youtube search
+     */
+    function createCollector(list) {
+      let embedHasBeenInteractedWith = false;
 
-    // When the time limit has been reached (15s), delete the message if it hasn't been interacted with
-    collector.on('end', async (collected) => {
-      console.log(`Collected ${collected.size} item(s)`);
-      if (!embedHasBeenInteractedWith) {
-        await interaction.deleteReply();
-      }
+      const collector = interaction.channel.createMessageComponentCollector({
+        time: 15000,
+        max: 1,
+      });
 
-      removeCollector(collector);
-    });
+      // Assign an uuid to the collector, and save it to a global collector array
+      collector.uuid = uuidv4();
+      addCollector(collector);
+
+      // Handle collector events
+      collector.on('collect', async (i) => {
+        // Update the embed interaction state
+        embedHasBeenInteractedWith = true;
+
+        if (i.customId == '5') {
+          // The cancel button has been pressed
+          await interaction.deleteReply();
+          removeCollector(collector);
+          collector.stop();
+          return;
+        }
+
+        const selectedVideo = list[parseInt(i.customId)];
+
+        const videoSuccess = async () => {
+          guildStream.addToQueue(selectedVideo);
+          guildStream.play();
+
+          // Replace the old embed with an added to queue message if the queue is not empty
+          if (guildStream.getQueue().length > 1) {
+            const addedToQueue = addedToQueueEmbed(selectedVideo, client);
+            await interaction.editReply({
+              embeds: [addedToQueue],
+              components: [],
+            });
+          } else {
+            await interaction.deleteReply();
+          }
+        };
+
+        if (guildStream.getQueue().length > 0) {
+          guildStream.addToQueue(selectedVideo);
+        } else {
+          guildStream
+            .connectToVC(channel.id)
+            .then(videoSuccess)
+            .catch(async (err) => {
+              console.error(err);
+              await interaction.editReply('Could not play the video!');
+            });
+        }
+      });
+
+      // When the time limit has been reached (15s), delete the message if it hasn't been interacted with
+      collector.on('end', async (collected) => {
+        console.log(`Collected ${collected.size} item(s)`);
+        if (!embedHasBeenInteractedWith) {
+          await interaction.deleteReply();
+        }
+
+        removeCollector(collector);
+      });
+    }
   },
 };
 
