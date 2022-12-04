@@ -318,6 +318,15 @@ class GuildStream {
   }
 
   /**
+   * Seek the currently playing video to a specific point
+   *
+   * @param {string} arg The seeking argument
+   */
+  seek(arg) {
+    if (!arg) throw new TypeError('String must be defined!');
+  }
+
+  /**
    * Skips the current song
    */
   skip() {
