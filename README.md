@@ -82,7 +82,7 @@ Set up the `.env` file
    CLIENT_ID='client_id'
 ```
 
-The values to put in the `.env` file can be found in the **discord developer portal.**
+The values to put in the `.env` file can be found in the [**discord developer portal.**](https://discord.com/developers/applications)
 
 Start the bot
 
