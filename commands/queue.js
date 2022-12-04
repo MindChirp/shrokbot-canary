@@ -36,6 +36,9 @@ module.exports = {
 
     let i = 0;
     for (const video of queue) {
+      if (i > 24) {
+        break;
+      }
       let name;
       if (i == 0) {
         name = 'Currently playing';
