@@ -25,4 +25,29 @@ function addedToQueueEmbed(video, client) {
   return embed;
 }
 
-module.exports = {addedToQueueEmbed};
+/**
+ * Generate a queue embed for any given playlist
+ *
+ * @param {object} playlist A playlist object
+ * @param {*} client The bot client
+ * @return {EmbedBuilder} The generated queue embed
+ */
+function playlistAddedToQueueEmbed(playlist, client) {
+  const embed = new EmbedBuilder()
+    .setColor(0xe803fc)
+    .setAuthor({
+      name: 'Playlist added to queue',
+      iconURL: client.user.displayAvatarURL(),
+      url: playlist.url,
+    })
+    .setTitle(playlist.title)
+    .setThumbnail(playlist.thumbnail)
+
+    .addFields(
+      {name: 'Author', value: playlist.author.name, inline: true},
+      {name: 'Length', value: playlist.videos.length + ' videos', inline: true}
+    );
+
+  return embed;
+}
+module.exports = {addedToQueueEmbed, playlistAddedToQueueEmbed};

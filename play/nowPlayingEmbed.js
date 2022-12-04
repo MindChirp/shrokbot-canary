@@ -7,6 +7,7 @@ const {EmbedBuilder} = require('@discordjs/builders');
  * @return {EmbedBuilder} The generated now playing embed
  */
 function nowPlayingEmbed(video, client) {
+  console.log(video);
   const embed = new EmbedBuilder()
     .setColor(0xe803fc)
     .setAuthor({
@@ -15,10 +16,14 @@ function nowPlayingEmbed(video, client) {
       url: video.url,
     })
     .setTitle(video.title)
-    .setThumbnail(video.image)
+    .setThumbnail(video.image ?? video.thumbnail)
     .addFields(
       {name: 'Channel', value: video.author.name, inline: true},
-      {name: 'Length', value: video.timestamp, inline: true}
+      {
+        name: 'Length',
+        value: video.duration.timestamp ?? video.timestamp,
+        inline: true,
+      }
     );
 
   return embed;
