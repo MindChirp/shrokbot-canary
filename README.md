@@ -41,6 +41,7 @@ To run this project, you will need to add the following environment variables to
     - /playtop `url` - Inserts a given song from youtube as the next in queue
     - /pause - Pauses the audio playback
     - /resume - Resumes the audio playback
+    - /fuckoff - Disconnects the bot, clearing the queue
 
 
 ## Roadmap
