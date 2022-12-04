@@ -11,15 +11,15 @@ function addedToQueueEmbed(video, client) {
     .setColor(0xe803fc)
     .setAuthor({
       name: 'Added to queue',
-      iconURL: client.user.displayAvatarURL(),
-      url: video.url,
+      iconURL: client.user.displayAvatarURL() ?? '',
+      url: video.url ?? '',
     })
-    .setTitle(video.title)
-    .setThumbnail(video.image)
+    .setTitle(video.title ?? 'Unknown video')
+    .setThumbnail(video.image ?? '')
 
     .addFields(
-      {name: 'Channel', value: video.author.name, inline: true},
-      {name: 'Length', value: video.timestamp, inline: true}
+      {name: 'Channel', value: video.author.name ?? 'unknown', inline: true},
+      {name: 'Length', value: video.timestamp ?? 'unknown', inline: true}
     );
 
   return embed;
@@ -37,11 +37,11 @@ function playlistAddedToQueueEmbed(playlist, client) {
     .setColor(0xe803fc)
     .setAuthor({
       name: 'Playlist added to queue',
-      iconURL: client.user.displayAvatarURL(),
-      url: playlist.url,
+      iconURL: client.user.displayAvatarURL() ?? '',
+      url: playlist.url ?? '',
     })
-    .setTitle(playlist.title)
-    .setThumbnail(playlist.thumbnail)
+    .setTitle(playlist.title ?? 'Unknown playlist')
+    .setThumbnail(playlist.thumbnail ?? '')
 
     .addFields(
       {name: 'Author', value: playlist.author.name ?? 'unknown', inline: true},
