@@ -44,8 +44,12 @@ function playlistAddedToQueueEmbed(playlist, client) {
     .setThumbnail(playlist.thumbnail)
 
     .addFields(
-      {name: 'Author', value: playlist.author.name, inline: true},
-      {name: 'Length', value: playlist.videos.length + ' videos', inline: true}
+      {name: 'Author', value: playlist.author.name ?? 'unknown', inline: true},
+      {
+        name: 'Length',
+        value: playlist.videos.length + ' videos' ?? 'unknown',
+        inline: true,
+      }
     );
 
   return embed;
