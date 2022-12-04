@@ -306,9 +306,14 @@ class GuildStream {
    * Disconnects the bot from the voice channel, and stops the playback
    */
   stop() {
-    this.#player.stop();
+    if (this.#player) {
+      this.#player.stop();
+    }
+    if (this.#connection) {
+      this.#connection.destroy();
+    }
+
     this.#queue = [];
-    this.#connection.destroy();
     this.#connection = undefined;
   }
 
