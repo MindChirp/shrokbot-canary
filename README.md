@@ -54,6 +54,8 @@ To run this project, you will need to add the following environment variables to
 
 - Add seeking functionality
 
+- Make certain commands guild specific. These are not included in the list above
+
 
 ## Run Locally
 
