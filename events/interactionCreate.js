@@ -1,5 +1,6 @@
 const {Events} = require('discord.js');
 const {partyTrick1} = require('../partytricks/adamDeny');
+const {partyTrick3} = require('../partytricks/behrensHandler');
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -17,6 +18,11 @@ module.exports = {
 
       const result = partyTrick1(interaction);
       if (result) return;
+
+      const result1 = partyTrick3(interaction);
+      if (result1) {
+        console.log('Pranked behrens!');
+      }
 
       try {
         await command.execute(interaction, client);
