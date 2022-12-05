@@ -56,6 +56,10 @@ To run this project, you will need to add the following environment variables to
 
 - Make certain commands guild specific. These are not included in the list above
 
+## Things to note
+
+This project contains some custom commands and features intended solely for personal use. If you consider using this bot, feel free to change these
+commands and features.
 
 ## Run Locally
 
