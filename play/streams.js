@@ -6,6 +6,7 @@ const {
   createAudioResource,
   entersState,
 } = require('@discordjs/voice');
+const audioContext = require('audio-context')();
 
 const {v4: uuidv4} = require('uuid');
 
@@ -28,6 +29,7 @@ class GuildStream {
   #voiceChannel;
   #player;
   #queue = [];
+  #effects = [];
   #uuid;
   #chatId;
   #continueOnEnd = true;
@@ -128,18 +130,15 @@ class GuildStream {
           )
         );
 
-      // console.log(path.join(path.dirname(__dirname), 'test.ogg'));
+      const oscillator = audioContext.createOscillator();
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(420, audioContext.currentTime);
 
-      /**
-        const resource = createAudioResource(
-        path.join(path.dirname(__dirname), 'test.wav'),
-        {
-            metadata: {
-            title: 'A good song!',
-            },
-        }
-        );
-        */
+      const biquadFilter = audioContext.createBiquadFilter();
+      biquadFilter.type = 'lowpass';
+      biquadFilter.frequency.setTargetAtTime(200, audioContext.currentTime + 1);
+      oscillator.connect(biquadFilter);
+      biquadFilter.connect(audioContext.destination);
 
       const player = createAudioPlayer();
 
@@ -412,6 +411,22 @@ class GuildStream {
   getChatId() {
     return this.#chatId;
   }
+
+  /**
+   * Get a list of all the currently active effects
+   *
+   * @return {array} A list of all the current effects
+   */
+  getEffects() {
+    return this.#effects;
+  }
+
+  /**
+   * Applies a given effect to the currently playing audio
+   *
+   * @param {string} effect The effect to apply
+   */
+  applyEffects(effect) {}
 }
 
 module.exports = {GuildStream, GuildVoiceClasses};
