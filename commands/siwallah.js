@@ -1,5 +1,4 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {GuildVoiceClasses} = require('../play/streams');
 
 /**
  * THIS COMMAND IS EXCLUSIVELY FOR A SERVER OF A FRIEND OF MINE
