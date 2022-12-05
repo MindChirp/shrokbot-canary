@@ -1,4 +1,5 @@
 const {Events} = require('discord.js');
+const {partyTrick1} = require('../partytricks/adamDeny');
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -14,6 +15,9 @@ module.exports = {
         return;
       }
 
+      const result = partyTrick1(interaction);
+      if (result) return;
+
       try {
         await command.execute(interaction, client);
       } catch (error) {
@@ -23,7 +27,6 @@ module.exports = {
         console.error(error);
         interaction.editReply('Sorry, an unexpected error occured.');
       }
-    } else if (interaction.isButton()) {
     }
   },
 };
