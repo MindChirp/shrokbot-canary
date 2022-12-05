@@ -1,5 +1,6 @@
 const {Events} = require('discord.js');
 const {partyTrick1} = require('../partytricks/adamDeny');
+const {partyTrick3} = require('../partytricks/behrensHandler');
 
 module.exports = {
   name: Events.InteractionCreate,
