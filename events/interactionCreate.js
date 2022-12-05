@@ -15,8 +15,15 @@ module.exports = {
         return;
       }
 
+      // Adam handler (custom party trick intended for personal use)
       const result = partyTrick1(interaction);
       if (result) return;
+
+      // Behrens handler (custom party trick intended for personal use)
+      const result1 = partyTrick3(interaction);
+      if (result1) {
+        console.log('Pranked behrens!');
+      }
 
       try {
         await command.execute(interaction, client);
