@@ -224,12 +224,16 @@ class GuildStream {
 
     // Notify a text channel when video starts playing
     const nowPlaying = nowPlayingEmbed(firstInQueue, this.#client);
-    const textChannel = this.#client.guilds.cache
-      .get(this.#guildId)
-      .channels.cache.get(this.#chatId);
-    textChannel.send({
-      embeds: [nowPlaying],
-    });
+    try {
+      const textChannel = this.#client.guilds.cache
+        .get(this.#guildId)
+        .channels.cache.get(this.#chatId);
+      textChannel.send({
+        embeds: [nowPlaying],
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     this.playVideo(firstInQueue).then(() => {
       // Remove the first entry
