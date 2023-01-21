@@ -170,6 +170,8 @@ class GuildStream {
         console.log('Playback has ended!');
         this.#player = undefined;
         player.stop();
+        // Disconnect the bot from the voice channel
+        this.stop();
         resolve();
       });
     });
@@ -224,6 +226,12 @@ class GuildStream {
 
     // Notify a text channel when video starts playing
     const nowPlaying = nowPlayingEmbed(firstInQueue, this.#client);
+
+    /*
+     * XXX
+     * This is a hacky way to prevent the bot from sending the now playing message
+     * if the client guild is not found.
+     */
     try {
       const textChannel = this.#client.guilds.cache
         .get(this.#guildId)
