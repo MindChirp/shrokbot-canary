@@ -168,10 +168,6 @@ class GuildStream {
 
       player.on(AudioPlayerStatus.Idle, () => {
         console.log('Playback has ended!');
-        this.#player = undefined;
-        player.stop();
-        // Disconnect the bot from the voice channel
-        this.stop();
         resolve();
       });
     });
