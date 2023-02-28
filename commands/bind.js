@@ -34,8 +34,6 @@ module.exports = {
 
     const selectedChannel = guildChannel ?? interaction.channel;
 
-    console.log(selectedChannel);
-
     guildStream.setChatId(selectedChannel.id);
     await interaction.editReply(
       'Text communications have been bound to ' + selectedChannel.toString()

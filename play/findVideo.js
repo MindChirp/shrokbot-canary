@@ -240,7 +240,6 @@ function createCollector(list, interaction) {
       }
 
       const selectedVideo = list[parseInt(i.customId)];
-      console.log(selectedVideo);
       returnObject.status = 'success';
       returnObject.video = selectedVideo;
       resolve(returnObject);
@@ -248,7 +247,6 @@ function createCollector(list, interaction) {
 
     // When the time limit has been reached (15s), delete the message if it hasn't been interacted with
     collector.on('end', async (collected) => {
-      console.log(`Collected ${collected.size} item(s)`);
       if (!embedHasBeenInteractedWith) {
         returnObject.status = 'timed-out';
         returnObject.video = undefined;

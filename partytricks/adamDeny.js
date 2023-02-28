@@ -17,8 +17,6 @@ function partyTrick1(interaction) {
     // Check if Adam should be trolled
     const rand = Math.random();
 
-    console.log(rand);
-
     if (rand <= occurencePercentage / 100) {
       // Troll adam 25 % of the time
       interaction.reply(customMessage);

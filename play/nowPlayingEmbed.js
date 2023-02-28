@@ -7,7 +7,6 @@ const {EmbedBuilder} = require('@discordjs/builders');
  * @return {EmbedBuilder} The generated now playing embed
  */
 function nowPlayingEmbed(video, client) {
-  console.log(video);
   const embed = new EmbedBuilder()
     .setColor(0xe803fc)
     .setAuthor({

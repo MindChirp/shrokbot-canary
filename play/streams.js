@@ -92,9 +92,6 @@ class GuildStream {
           try {
             this.#player.stop();
           } catch (error) {
-            console.log(
-              'COULD NOT STOP PLAYER WHEN DISCONNECTED. PROBABLY NOT SERIOUS'
-            );
             console.error(error);
           }
           this.#player = undefined;
@@ -149,8 +146,6 @@ class GuildStream {
 
       try {
         await entersState(player, AudioPlayerStatus.Playing, 5_000);
-
-        console.log('Playback has started!');
       } catch (error) {
         console.error(error);
       }
@@ -163,11 +158,9 @@ class GuildStream {
 
       // This triggers when playback has started
       player.on(AudioPlayerStatus.Playing, (msg) => {
-        console.log('Playback has started!');
       });
 
       player.on(AudioPlayerStatus.Idle, () => {
-        console.log('Playback has ended!');
         resolve();
       });
     });
@@ -188,10 +181,16 @@ class GuildStream {
       }
 
       // Create an audio source
-      console.log(video);
-      const stream = await ytdl(video.url, {
-        highWaterMark: 1 << 25,
-      });
+      let stream;
+      try {
+        stream = await ytdl(video.url, {
+          highWaterMark: 1 << 25,
+        });
+      } catch (error) {
+        console.error(error);
+        reject(error);
+        return;
+      }
       const resource = createAudioResource(stream);
 
       // Pipe the new audio source to the current voice channel
@@ -246,10 +245,16 @@ class GuildStream {
         return;
       }
 
-      console.log('Moving over to the next video');
       this.#queue.shift();
       this.play();
-    });
+    })
+    .catch(err=>{
+      console.error(err);
+      const textChannel = this.#client.guilds.cache
+        .get(this.#guildId)
+        .channels.cache.get(this.#chatId);
+      textChannel.send("I'n sorry, but I could not play the video!");
+    })
   }
 
   /**
