@@ -184,7 +184,7 @@ class GuildStream {
       let stream;
       try {
         stream = await ytdl(video.url, {
-          highWaterMark: 1 << 20,
+          highWaterMark: 1 << 10,
         });
       } catch (error) {
         console.error(error);
