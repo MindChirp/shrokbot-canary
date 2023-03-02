@@ -10,7 +10,10 @@ module.exports = {
     // Check if the bot is in mantenance mode
     const maintenance = process.env.MAINTENANCE;
     if (maintenance == true) {
-      interaction.reply('Sorry! The bot is currently in maintenance mode!');
+      interaction.reply(
+        'Sorry! The bot is currently in maintenance mode! ' +
+          process.env.MAINTENANCE_MESSAGE
+      );
       return;
     }
 
