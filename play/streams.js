@@ -184,7 +184,9 @@ class GuildStream {
       let stream;
       try {
         stream = await ytdl(video.url, {
-          highWaterMark: 1 << 10,
+          highWaterMark: 1 << 25,
+          filter: 'audioonly',
+          quality: 'highestaudio',
         });
       } catch (error) {
         console.error(error);
