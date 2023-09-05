@@ -1,6 +1,8 @@
 
 # Shrokbot
 
+**NOTE:** This bot has been deprecated in favor of the new and improved shrokbot 2.
+
 This is a simple multi-purpose bot built for pure enjoyment by close friends. Use at your own risk.
 
 
